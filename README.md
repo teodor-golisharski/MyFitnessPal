@@ -1,2 +1,2 @@
 # MyFitnessPal
-MyFitnessPal is a command-line-based application developed as the final project for the Introduction to Programming pracitcum course.
+MyFitnessPal is a user-friendly application designed to help individuals monitor their fitness journey by tracking calorie intake, exercise routines, and overall progress. Developed as part of the Introduction to Programming practicum course, this project introduces essential programming concepts while providing practical functionality for everyday use.
