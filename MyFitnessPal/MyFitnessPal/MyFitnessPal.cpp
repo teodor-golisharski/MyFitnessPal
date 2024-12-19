@@ -18,7 +18,9 @@ void log_out() {
 }
 
 void start_guide() {
-    // Printing the menu with main commands and instructions for exploitation.
+    std::cout << "-----------------------------------" << std::endl;
+    std::cout << "Welcome to MyFitnessPal" << std::endl;
+    std::cout << "-----------------------------------" << std::endl;
 }
 
 int main()
