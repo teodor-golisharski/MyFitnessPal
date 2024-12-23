@@ -29,14 +29,15 @@ const std::string LOGS_FILE_NAME = "logs.txt";
 
 void create_account() {
 	std::cout << "----------- Registration -----------" << std::endl;
-	std::string username, password, gender, birthdate, activity_level, goal, account;
+	std::string username, password, gender, birthdate, goal, account;
 
 	std::cout << "Username: ";
 	std::cin >> username;
 	std::cout << "\nPassword: ";
 	std::cin >> password;
 
-	int age, height;
+	int age, height, activity_level;
+	double weight;
 
 	std::cout << "----------- Personal Details -----------" << std::endl;
 	std::cout << "Age: ";
@@ -45,6 +46,18 @@ void create_account() {
 	std::cin >> gender;
 	std::cout << "\nHeight: ";
 	std::cin >> height;
+	std::cout << "\nWeight: ";
+	std::cin >> weight;
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "1 - Sedentary (little to no exercise)";
+	std::cout << "2 - Light activity (exercise 1-3 days per week)";
+	std::cout << "3 - Moderate activity (exercise 3-5 days per week)";
+	std::cout << "4 - Active (exercise 6-7 days per week)";
+	std::cout << "5 - Very active (intense workouts or physical labor)";
+	std::cout << "#Guide: Type the number based on your activity.";
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "\nActivity level: ";
+	std::cin >> activity_level;
 
 }
 
@@ -64,7 +77,6 @@ void start_guide() {
 	std::cout << "-----------------------------------" << std::endl;
 	std::cout << "Welcome to MyFitnessPal" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
-
 }
 
 void load_information() {
@@ -109,8 +121,6 @@ void run() {
 		std::cout << usernames[i] << std::endl;
 	}
 }
-
-
 
 
 int main()
