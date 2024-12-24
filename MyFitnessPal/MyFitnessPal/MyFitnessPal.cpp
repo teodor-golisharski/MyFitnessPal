@@ -18,6 +18,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "ErrorMessages.hpp"
 
 static std::vector<std::string> usernames;
 static std::vector<std::string> logs;
@@ -29,6 +30,7 @@ static std::string current_user = "";
 
 const std::string USERS_FILE_NAME = "users.txt";
 const std::string LOGS_FILE_NAME = "logs.txt";
+
 
 bool validate_username(std::string username) {
 	for (size_t i = 0; i < usernames.size(); i++)
@@ -70,13 +72,16 @@ bool create_account() {
 	std::cout << "Age: ";
 	std::cin >> age;
 
-	std::cout << "\nGender: ";
+	std::cout << "\nGender (male/female): ";
 	std::cin >> gender;
+	if (gender != "male" && gender != "female") {
+		return false;
+	}
 
-	std::cout << "\nHeight: ";
+	std::cout << "\nHeight (in cm): ";
 	std::cin >> height;
 
-	std::cout << "\nWeight: ";
+	std::cout << "\nWeight (in kg): ";
 	std::cin >> weight;
 
 	std::cout << "\n-------------------------------------------------------" << std::endl;
@@ -201,6 +206,13 @@ void read_information() {
 void run() {
 	start_guide();
 	load_information();
+
+	std::string command;
+	while (true) {
+		std::cin >> command;
+		1
+	}
+
 
 	for (size_t i = 0; i < usernames.size(); i++)
 	{

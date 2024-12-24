@@ -129,6 +129,9 @@
   <ItemGroup>
     <ClCompile Include="MyFitnessPal.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ErrorMessages.hpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
