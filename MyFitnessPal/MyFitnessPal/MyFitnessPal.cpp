@@ -30,15 +30,38 @@ static std::string current_user = "";
 const std::string USERS_FILE_NAME = "users.txt";
 const std::string LOGS_FILE_NAME = "logs.txt";
 
-void create_account() {
+bool validate_username(std::string username) {
+	for (size_t i = 0; i < usernames.size(); i++)
+	{
+		if (usernames[i] == username) {
+			return true;
+		}
+	}
+	return false;
+}
+
+bool validate_password(std::string password) {
+	if (password.find('%')) {
+		return false;
+	}
+	return true;
+}
+
+bool create_account() {
 	std::cout << "----------- Registration -----------" << std::endl;
-	std::string username, password, gender, birthdate, goal = "", account;
+	std::string username, password, gender, birthdate, account;
 
 	std::cout << "Username: ";
 	std::cin >> username;
+	if (!validate_username(username)) {
+		return false;
+	}
 
 	std::cout << "\nPassword: ";
 	std::cin >> password;
+	if (!validate_password(password)) {
+		return false;
+	}
 
 	int age, height, activity_level;
 	double weight;
@@ -81,10 +104,10 @@ void create_account() {
 	std::cout << "3 - Gain weight" << std::endl;
 	std::cout << "#Guide: Type the number based on your goal." << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
-	int tempOption1 = 0, tempOption2 = 0;
+	int goal = 0, rate = 0;
 	std::cout << "Goal: ";
-	std::cin >> tempOption1;
-	if (tempOption1 != 2) {
+	std::cin >> goal;
+	if (goal != 2) {
 		std::cout << "\n-------------------------------------------------------" << std::endl;
 		std::cout << "1 - 0.25 kg a week" << std::endl;
 		std::cout << "2 - 0.50 kg a week" << std::endl;
@@ -93,14 +116,14 @@ void create_account() {
 		std::cout << "#Guide: Type the number based on your desired transformation rate.";
 		std::cout << "-------------------------------------------------------" << std::endl;
 		std::cout << "Rate: ";
-		std::cin >> tempOption2;
+		std::cin >> rate;
 
-		tempOption2 = tempOption2 == 1 ? 275 : tempOption2 == 2 ? 550 : tempOption2 == 3 ? 825 : 1110;
-		if (tempOption1 == 1) {
-			tempOption2 = 0 - tempOption2;
+		rate = rate == 1 ? 275 : rate == 2 ? 550 : rate == 3 ? 825 : 1110;
+		if (goal == 1) {
+			rate = 0 - rate;
 		}
 	}
-	additional += tempOption2;
+	additional += rate;
 
 	std::cout << "\n-------------------------------------------------------" << std::endl;
 	std::cout << "------------------CHOOSE ACCOUNT TYPE------------------" << std::endl;
@@ -109,6 +132,16 @@ void create_account() {
 	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "AccountType: ";
 	std::cin >> account;
+
+	std::string user_log = username + "%" + password + "%" + birthdate + "%" + gender + "%" + std::to_string(height) + "%" + std::to_string(weight) + "%" + std::to_string(activity_level) + "%" + std::to_string(goal) + "%" + std::to_string(rate) + "%" + account;
+	std::ofstream file(USERS_FILE_NAME);
+
+	if (!file.is_open()) {
+		std::cout << "Error!" << std::endl;
+		return false;
+	}
+	file << user_log << std::endl;
+	return true;
 }
 
 void delete_account(std::string username, std::string password) {
@@ -116,7 +149,7 @@ void delete_account(std::string username, std::string password) {
 }
 
 void log_in(std::string username, std::string password) {
-	// logs in existring user
+	// logs in existing user
 }
 
 void log_out() {
@@ -160,6 +193,9 @@ void load_information() {
 		}
 		in_logs.close();
 	}
+}
+void read_information() {
+
 }
 
 void run() {
