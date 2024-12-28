@@ -1,28 +1,14 @@
-/*
-*
-* Solution to course project # 9
-* Introduction to programming course
-* Faculty of Mathematics and Informatics of Sofia University
-* Winter semester 2024/2025
-*
-* @author Teodor Golisharski
-* @idnumber 6MI0600367
-* @compiler VC
-*
-* MyFitnessPal CLI Application
-*
-*/
-
-
 #include <iostream>
 #include <string>
 #include <vector>
 #include <fstream>
 #include "ErrorMessages.hpp"
-#include "Validation.hpp"
 
 static std::vector<std::string> usernames;
 static std::vector<std::string> logs;
+
+#include "Validation.hpp"
+
 static double bmr = 0;
 static int maintainCalories = 0;
 static int additional = 0;
@@ -32,11 +18,26 @@ static std::string current_user = "";
 const std::string USERS_FILE_NAME = "users.txt";
 const std::string LOGS_FILE_NAME = "logs.txt";
 
+void save_user(const std::string& username, const std::string& password, int age,
+	const std::string& gender, int height, double weight,
+	int activity_level, int goal, int rate, const std::string& account) {
+	std::ofstream file(USERS_FILE_NAME, std::ios::app);
+
+	if (!file.is_open()) {
+		std::cerr << FILE_NOT_FOUND << std::endl;
+		return;
+	}
+	file << username << "%" << password << "%" << age << "%"
+		<< gender << "%" << height << "%" << weight << "%"
+		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
+	file.close();
+	std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
+}
 
 bool create_account() {
 	std::cout << "----------- Registration -----------" << std::endl;
-	
-	std::string username, password, gender, account;
+
+	std::string username, password, gender, account, birthdate;
 	int age, height, activity_level, goal = 0, rate = 0;
 	double weight;
 
@@ -55,12 +56,7 @@ bool create_account() {
 	}
 
 	std::cout << "----------- Personal Details -----------" << std::endl;
-	while (true) {
-		std::cout << "Age: ";
-		std::cin >> age;
-		if (validate_age(age)) break;
-		std::cout <<  << std::endl;
-	}
+	// Birthdate
 
 	std::cout << "\nGender (male/female): ";
 	std::cin >> gender;
@@ -99,7 +95,7 @@ bool create_account() {
 	std::cout << "3 - Gain weight" << std::endl;
 	std::cout << "#Guide: Type the number based on your goal." << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
-	int goal = 0, rate = 0;
+
 	std::cout << "Goal: ";
 	std::cin >> goal;
 	if (goal != 2) {
@@ -128,16 +124,8 @@ bool create_account() {
 	std::cout << "AccountType: ";
 	std::cin >> account;
 
-	
-	std::string user_log = username + "%" + password + "%" + birthdate + "%" + gender + "%" + std::to_string(height) + "%" + std::to_string(weight) + "%" + std::to_string(activity_level) + "%" + std::to_string(goal) + "%" + std::to_string(rate) + "%" + account;
-	std::ofstream file(USERS_FILE_NAME);
 
-	if (!file.is_open()) {
-		std::cout << FILE_NOT_FOUND << std::endl;
-		return false;
-	}
-	file << user_log << std::endl;
-	return true;
+	save_user(username, password, age, gender, height, weight, activity_level, goal, rate, account);
 }
 
 void delete_account(std::string username, std::string password) {
@@ -205,7 +193,7 @@ void run() {
 	start_guide();
 	load_information();
 
-
+	
 }
 
 
@@ -213,4 +201,7 @@ int main()
 {
 	std::cout << "\n-------------------------------------------------------" << std::endl;
 	//run();
+
+	std::cerr << "Sorry error occurred!";
+	
 }
