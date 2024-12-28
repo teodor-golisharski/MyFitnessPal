@@ -23,5 +23,8 @@
     <ClInclude Include="ErrorMessages.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Validation.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

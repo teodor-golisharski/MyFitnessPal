@@ -19,6 +19,7 @@
 #include <vector>
 #include <fstream>
 #include "ErrorMessages.hpp"
+#include "Validation.hpp"
 
 static std::vector<std::string> usernames;
 static std::vector<std::string> logs;
@@ -32,45 +33,34 @@ const std::string USERS_FILE_NAME = "users.txt";
 const std::string LOGS_FILE_NAME = "logs.txt";
 
 
-bool validate_username(std::string username) {
-	for (size_t i = 0; i < usernames.size(); i++)
-	{
-		if (usernames[i] == username) {
-			return true;
-		}
-	}
-	return false;
-}
-
-bool validate_password(std::string password) {
-	if (password.find('%')) {
-		return false;
-	}
-	return true;
-}
-
 bool create_account() {
 	std::cout << "----------- Registration -----------" << std::endl;
-	std::string username, password, gender, birthdate, account;
-
-	std::cout << "Username: ";
-	std::cin >> username;
-	if (!validate_username(username)) {
-		return false;
-	}
-
-	std::cout << "\nPassword: ";
-	std::cin >> password;
-	if (!validate_password(password)) {
-		return false;
-	}
-
-	int age, height, activity_level;
+	
+	std::string username, password, gender, account;
+	int age, height, activity_level, goal = 0, rate = 0;
 	double weight;
 
+	while (true) {
+		std::cout << "Username: ";
+		std::cin >> username;
+		if (validate_username(username)) break;
+		std::cout << INVALID_USERNAME << std::endl;
+	}
+
+	while (true) {
+		std::cout << "Password: ";
+		std::cin >> password;
+		if (validate_password(password)) break;
+		std::cout << INVALID_PASSWORD << std::endl;
+	}
+
 	std::cout << "----------- Personal Details -----------" << std::endl;
-	std::cout << "Age: ";
-	std::cin >> age;
+	while (true) {
+		std::cout << "Age: ";
+		std::cin >> age;
+		if (validate_age(age)) break;
+		std::cout <<  << std::endl;
+	}
 
 	std::cout << "\nGender (male/female): ";
 	std::cin >> gender;
@@ -138,11 +128,12 @@ bool create_account() {
 	std::cout << "AccountType: ";
 	std::cin >> account;
 
+	
 	std::string user_log = username + "%" + password + "%" + birthdate + "%" + gender + "%" + std::to_string(height) + "%" + std::to_string(weight) + "%" + std::to_string(activity_level) + "%" + std::to_string(goal) + "%" + std::to_string(rate) + "%" + account;
 	std::ofstream file(USERS_FILE_NAME);
 
 	if (!file.is_open()) {
-		std::cout << "Error!" << std::endl;
+		std::cout << FILE_NOT_FOUND << std::endl;
 		return false;
 	}
 	file << user_log << std::endl;
@@ -202,22 +193,19 @@ void load_information() {
 void read_information() {
 
 }
+void command_line() {
+
+	std::string input;
+	std::cin >> input;
+
+
+}
 
 void run() {
 	start_guide();
 	load_information();
 
-	std::string command;
-	while (true) {
-		std::cin >> command;
-		1
-	}
 
-
-	for (size_t i = 0; i < usernames.size(); i++)
-	{
-		std::cout << usernames[i] << std::endl;
-	}
 }
 
 
