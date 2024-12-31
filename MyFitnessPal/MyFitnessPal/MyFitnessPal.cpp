@@ -18,7 +18,7 @@ static std::string current_user = "";
 const std::string USERS_FILE_NAME = "users.txt";
 const std::string LOGS_FILE_NAME = "logs.txt";
 
-void save_user(const std::string& username, const std::string& password, int age,
+void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	const std::string& gender, int height, double weight,
 	int activity_level, int goal, int rate, const std::string& account) {
 	std::ofstream file(USERS_FILE_NAME, std::ios::app);
@@ -27,7 +27,7 @@ void save_user(const std::string& username, const std::string& password, int age
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
-	file << username << "%" << password << "%" << age << "%"
+	file << username << "%" << password << "%" << birthdate << "%"
 		<< gender << "%" << height << "%" << weight << "%"
 		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
 	file.close();
@@ -56,7 +56,7 @@ bool create_account() {
 	}
 
 	std::cout << "----------- Personal Details -----------" << std::endl;
-	// Birthdate
+	std::string birthdate = get_birthday();
 
 	std::cout << "\nGender (male/female): ";
 	std::cin >> gender;
@@ -125,7 +125,7 @@ bool create_account() {
 	std::cin >> account;
 
 
-	save_user(username, password, age, gender, height, weight, activity_level, goal, rate, account);
+	save_user(username, password, , gender, height, weight, activity_level, goal, rate, account);
 }
 
 void delete_account(std::string username, std::string password) {
@@ -193,7 +193,6 @@ void run() {
 	start_guide();
 	load_information();
 
-	
 }
 
 
@@ -203,5 +202,4 @@ int main()
 	//run();
 
 	std::cerr << "Sorry error occurred!";
-	
 }

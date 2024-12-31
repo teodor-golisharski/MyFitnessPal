@@ -30,3 +30,18 @@ bool is_valid_date(int year, int month, int day) {
 	}
 	return true;
 }
+
+std::string get_birthday() {
+	int year, month, day;
+	while (true) {
+		std::cout << "Enter birthday (YYYY-MM-DD): ";
+		char delimiter;
+		if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && is_valid_date(year, month, day)) {
+			return std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" +
+				(day < 10 ? "0" : "") + std::to_string(day);
+		}
+		std::cout << INVALID_BIRTHDATE << std::endl;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
+}

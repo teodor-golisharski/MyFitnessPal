@@ -24,7 +24,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Validation.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
