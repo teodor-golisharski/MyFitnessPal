@@ -1,6 +1,9 @@
 #pragma once
 
-bool validate_username(std::string username) {
+bool validate_username(std::string& username) {
+	if (usernames.size() == 0) {
+		return true;
+	}
 	for (size_t i = 0; i < usernames.size(); i++)
 	{
 		if (usernames[i] == username) {
@@ -10,8 +13,8 @@ bool validate_username(std::string username) {
 	return false;
 }
 
-bool validate_password(std::string password) {
-	if (password.find('%')) {
+bool validate_password(std::string& password) {
+	if (password.find('%') != std::string::npos) {
 		return false;
 	}
 	return true;

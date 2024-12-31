@@ -45,38 +45,39 @@ bool create_account() {
 		std::cout << "Username: ";
 		std::cin >> username;
 		if (validate_username(username)) break;
-		std::cout << INVALID_USERNAME << std::endl;
+		std::cerr << INVALID_USERNAME << std::endl;
 	}
 
 	while (true) {
 		std::cout << "Password: ";
 		std::cin >> password;
 		if (validate_password(password)) break;
-		std::cout << INVALID_PASSWORD << std::endl;
+		std::cerr << INVALID_PASSWORD << std::endl;
 	}
 
 	std::cout << "----------- Personal Details -----------" << std::endl;
-	std::string birthdate = get_birthday();
+	birthdate = get_birthday();
 
-	std::cout << "\nGender (male/female): ";
-	std::cin >> gender;
-	if (gender != "male" && gender != "female") {
-		return false;
+	while (true) {
+		std::cout << "Gender (male/female): ";
+		std::cin >> gender;
+		if (gender != "male" && gender != "female") break;
+		std::cerr << INVALID_GENDER << std::endl;
 	}
-
-	std::cout << "\nHeight (in cm): ";
+	
+	std::cout << "Height (in cm): ";
 	std::cin >> height;
 
-	std::cout << "\nWeight (in kg): ";
+	std::cout << "Weight (in kg): ";
 	std::cin >> weight;
 
-	std::cout << "\n-------------------------------------------------------" << std::endl;
-	std::cout << "1 - Sedentary (little to no exercise)";
-	std::cout << "2 - Light activity (exercise 1-3 days per week)";
-	std::cout << "3 - Moderate activity (exercise 3-5 days per week)";
-	std::cout << "4 - Active (exercise 6-7 days per week)";
-	std::cout << "5 - Very active (intense workouts or physical labor)";
-	std::cout << "#Guide: Type the number based on your activity.";
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
+	std::cout << "2 - Light activity (exercise 1-3 days per week)" << std::endl;
+	std::cout << "3 - Moderate activity (exercise 3-5 days per week)" << std::endl;
+	std::cout << "4 - Active (exercise 6-7 days per week)" << std::endl;
+	std::cout << "5 - Very active (intense workouts or physical labor)" << std::endl;
+	std::cout << "#Guide: Type the number based on your activity." << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "Activity level: ";
 	std::cin >> activity_level;
@@ -87,19 +88,22 @@ bool create_account() {
 	case 3: bmr = 1.55; break;
 	case 4: bmr = 1.725; break;
 	case 5: bmr = 1.9; break;
+	default: { 
+		std::cerr << INVALID_ACTIVITY_LEVEL << std::endl; 
+		return false; 
+		}
 	}
 
-	std::cout << "\n-------------------------------------------------------" << std::endl;
+	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "1 - Lose weight" << std::endl;
 	std::cout << "2 - Maintain weight" << std::endl;
 	std::cout << "3 - Gain weight" << std::endl;
 	std::cout << "#Guide: Type the number based on your goal." << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
-
 	std::cout << "Goal: ";
 	std::cin >> goal;
 	if (goal != 2) {
-		std::cout << "\n-------------------------------------------------------" << std::endl;
+		std::cout << "-------------------------------------------------------" << std::endl;
 		std::cout << "1 - 0.25 kg a week" << std::endl;
 		std::cout << "2 - 0.50 kg a week" << std::endl;
 		std::cout << "3 - 0.75 kg a week" << std::endl;
@@ -116,8 +120,8 @@ bool create_account() {
 	}
 	additional += rate;
 
-	std::cout << "\n-------------------------------------------------------" << std::endl;
-	std::cout << "------------------CHOOSE ACCOUNT TYPE------------------" << std::endl;
+	std::cout << "-------------------------------------------------------" << std::endl;
+	std::cout << "----------------- CHOOSE ACCOUNT TYPE -----------------" << std::endl;
 	std::cout << "1 - Standard" << std::endl;
 	std::cout << "2 - Premium" << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
@@ -125,7 +129,7 @@ bool create_account() {
 	std::cin >> account;
 
 
-	save_user(username, password, , gender, height, weight, activity_level, goal, rate, account);
+	save_user(username, password, birthdate, gender, height, weight, activity_level, goal, rate, account);
 }
 
 void delete_account(std::string username, std::string password) {
@@ -201,5 +205,5 @@ int main()
 	std::cout << "\n-------------------------------------------------------" << std::endl;
 	//run();
 
-	std::cerr << "Sorry error occurred!";
+	create_account();
 }
