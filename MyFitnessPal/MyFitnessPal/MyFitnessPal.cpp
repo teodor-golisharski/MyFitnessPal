@@ -3,11 +3,7 @@
 #include <vector>
 #include <fstream>
 #include "ErrorMessages.hpp"
-
-static std::vector<std::string> usernames;
-static std::vector<std::string> logs;
-
-#include "Validation.hpp"
+#include "Validation.cpp"
 
 static double bmr = 0;
 static int maintainCalories = 0;
@@ -44,21 +40,19 @@ bool create_account() {
 	while (true) {
 		std::cout << "Username: ";
 		std::cin >> username;
-		if (validate_username(username)) break;
+		if (DataValidation::validate_username(username)) break;
 		std::cerr << INVALID_USERNAME << std::endl;
 	}
 
 	while (true) {
 		std::cout << "Password: ";
 		std::cin >> password;
-		if (validate_password(password)) break;
+		if (DataValidation::validate_password(password)) break;
 		std::cerr << INVALID_PASSWORD << std::endl;
 	}
 
 	std::cout << "------------------ PERSONAL DETAILS -------------------" << std::endl;
-
-
-	birthdate = get_birthday();
+	birthdate = InputIntegratedValidation::get_birthday();
 
 	while (true) {
 		std::cout << "Gender (male/female): ";
@@ -68,17 +62,25 @@ bool create_account() {
 	}
 	
 	std::cout << "Height (in cm): ";
-	std::cin >> height;
+	while (!(std::cin >> height) || height <= 0) {
+		std::cerr << INVALID_HEIGHT;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
 
 	std::cout << "Weight (in kg): ";
-	std::cin >> weight;
+	while (!(std::cin >> weight) || weight <= 0) {
+		std::cerr << INVALID_WEIGHT;
+		std::cin.clear();
+		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+	}
 
 	std::cout << "-------------------------------------------------------" << std::endl;
-	std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
-	std::cout << "2 - Light activity (exercise 1-3 days per week)" << std::endl;
-	std::cout << "3 - Moderate activity (exercise 3-5 days per week)" << std::endl;
-	std::cout << "4 - Active (exercise 6-7 days per week)" << std::endl;
-	std::cout << "5 - Very active (intense workouts or physical labor)" << std::endl;
+	std::cout << "0 - Sedentary (little to no exercise)" << std::endl;
+	std::cout << "1 - Light activity (exercise 1-3 days per week)" << std::endl;
+	std::cout << "2 - Moderate activity (exercise 3-5 days per week)" << std::endl;
+	std::cout << "3 - Active (exercise 6-7 days per week)" << std::endl;
+	std::cout << "4 - Very active (intense workouts or physical labor)" << std::endl;
 	std::cout << "#Guide: Type the number based on your activity." << std::endl;
 	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "Activity level: ";
@@ -104,6 +106,7 @@ bool create_account() {
 	std::cout << "-------------------------------------------------------" << std::endl;
 	std::cout << "Goal: ";
 	std::cin >> goal;
+
 	if (goal != 2) {
 		std::cout << "-------------------------------------------------------" << std::endl;
 		std::cout << "1 - 0.25 kg a week" << std::endl;
