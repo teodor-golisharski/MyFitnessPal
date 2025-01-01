@@ -1,18 +1,34 @@
 #pragma once
 #include <string>
+#include "ApplicationConstants.h"
 
 static std::vector<std::string> usernames;
 static std::vector<std::string> logs;
 
-const double ACTIVITY_LEVELS[] = { 1.2, 1.375, 1.55, 1.725, 1.9 };
-const int MAX_ACTIVITY_LEVEL = 5;
+void load_usernames() {
+	std::ifstream in_users(USERS_FILE_NAME);
+	if (!in_users) {
+		std::ofstream users(USERS_FILE_NAME);
+		users.close();
+	}
+	else {
+		std::string line;
+		while (std::getline(in_users, line)) {
+			size_t pos = line.find('%');
+			if (pos != std::string::npos) {
 
-const int TRANSFORMATION_RATES[] = { 275, 550, 825, 1110 };
-const int MAX_RATE = 4;
-
+				std::string username = line.substr(0, pos);
+				usernames.push_back(username);
+			}
+		}
+		in_users.close();
+	}
+}
 
 namespace DataValidation {
 	bool validate_username(std::string& username) {
+
+		load_usernames();
 		if (usernames.size() == 0) {
 			return true;
 		}
@@ -48,7 +64,6 @@ namespace DataValidation {
 		}
 		return true;
 	}
-
 }
 
 namespace InputIntegratedValidation {
@@ -83,7 +98,7 @@ namespace InputIntegratedValidation {
 		}
 	}
 
-	double getActivityLevel() {
+	int get_activity_level() {
 		std::cout << "-------------------------------------------------------\n";
 		std::cout << "1 - Sedentary (little to no exercise)\n";
 		std::cout << "2 - Light activity (exercise 1-3 days per week)\n";
@@ -94,7 +109,45 @@ namespace InputIntegratedValidation {
 		std::cout << "-------------------------------------------------------\n";
 
 		int activity_level = get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
-		return ACTIVITY_LEVELS[activity_level - 1];
+		return activity_level - 1;
+	}
+
+	int get_goal() {
+		std::cout << "-------------------------------------------------------\n";
+		std::cout << "1 - Lose weight\n";
+		std::cout << "2 - Maintain weight\n";
+		std::cout << "3 - Gain weight\n";
+		std::cout << "#Guide: Type the number based on your goal.\n";
+		std::cout << "-------------------------------------------------------\n";
+
+		return get_validated_input("Goal: ", 1, 3);
+	}
+
+	int get_rate(int goal) {
+		if (goal != 2) {
+			std::cout << "-------------------------------------------------------\n";
+			std::cout << "1 - 0.25 kg a week\n";
+			std::cout << "2 - 0.50 kg a week\n";
+			std::cout << "3 - 0.75 kg a week\n";
+			std::cout << "4 - 1 kg a week\n";
+			std::cout << "#Guide: Type the number based on your desired transformation rate.\n";
+			std::cout << "-------------------------------------------------------\n";
+
+			int rate_choice = get_validated_input("Rate: ", 1, MAX_RATE);
+			int rate = TRANSFORMATION_RATES[rate_choice - 1];
+			return (goal == 1) ? -rate : rate; 
+		}
+		return 0;
+	}
+
+	int get_account_type() {
+		std::cout << "-------------------------------------------------------\n";
+		std::cout << "----------------- CHOOSE ACCOUNT TYPE -----------------\n";
+		std::cout << "1 - Standard\n";
+		std::cout << "2 - Premium\n";
+		std::cout << "-------------------------------------------------------\n";
+
+		return get_validated_input("AccountType: ", 1, 2);
 	}
 }
 
