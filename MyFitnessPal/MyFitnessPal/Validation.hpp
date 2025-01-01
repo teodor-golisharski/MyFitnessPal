@@ -4,13 +4,16 @@ bool validate_username(std::string& username) {
 	if (usernames.size() == 0) {
 		return true;
 	}
+	if (username.find('%') != std::string::npos) {
+		return false;
+	}
 	for (size_t i = 0; i < usernames.size(); i++)
 	{
 		if (usernames[i] == username) {
-			return true;
+			return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 bool validate_password(std::string& password) {

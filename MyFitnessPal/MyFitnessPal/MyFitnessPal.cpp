@@ -20,14 +20,14 @@ const std::string LOGS_FILE_NAME = "logs.txt";
 
 void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	const std::string& gender, int height, double weight,
-	int activity_level, int goal, int rate, const std::string& account) {
+	int activity_level, int goal, int rate, int account) {
 	std::ofstream file(USERS_FILE_NAME, std::ios::app);
 
 	if (!file.is_open()) {
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
-	file << username << "%" << password << "%" << birthdate << "%"
+	file << "\n" << username << "%" << password << "%" << birthdate << "%"
 		<< gender << "%" << height << "%" << weight << "%"
 		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
 	file.close();
@@ -37,8 +37,8 @@ void save_user(const std::string& username, const std::string& password, const s
 bool create_account() {
 	std::cout << "----------- Registration -----------" << std::endl;
 
-	std::string username, password, gender, account, birthdate;
-	int age, height, activity_level, goal = 0, rate = 0;
+	std::string username, password, gender, birthdate;
+	int age, height, activity_level, goal = 0, rate = 0, account;
 	double weight;
 
 	while (true) {
@@ -61,7 +61,7 @@ bool create_account() {
 	while (true) {
 		std::cout << "Gender (male/female): ";
 		std::cin >> gender;
-		if (gender != "male" && gender != "female") break;
+		if (gender == "male" || gender == "female") break;
 		std::cerr << INVALID_GENDER << std::endl;
 	}
 	
@@ -108,7 +108,7 @@ bool create_account() {
 		std::cout << "2 - 0.50 kg a week" << std::endl;
 		std::cout << "3 - 0.75 kg a week" << std::endl;
 		std::cout << "4 - 1 kg a week" << std::endl;
-		std::cout << "#Guide: Type the number based on your desired transformation rate.";
+		std::cout << "#Guide: Type the number based on your desired transformation rate." << std::endl;
 		std::cout << "-------------------------------------------------------" << std::endl;
 		std::cout << "Rate: ";
 		std::cin >> rate;
@@ -204,6 +204,6 @@ int main()
 {
 	std::cout << "\n-------------------------------------------------------" << std::endl;
 	//run();
-
+	load_information();
 	create_account();
 }
