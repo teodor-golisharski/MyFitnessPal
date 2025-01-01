@@ -35,7 +35,7 @@ void save_user(const std::string& username, const std::string& password, const s
 }
 
 bool create_account() {
-	std::cout << "----------- Registration -----------" << std::endl;
+	std::cout << "-------------------- REGISTRATION ---------------------" << std::endl;
 
 	std::string username, password, gender, birthdate;
 	int age, height, activity_level, goal = 0, rate = 0, account;
@@ -55,7 +55,9 @@ bool create_account() {
 		std::cerr << INVALID_PASSWORD << std::endl;
 	}
 
-	std::cout << "----------- Personal Details -----------" << std::endl;
+	std::cout << "------------------ PERSONAL DETAILS -------------------" << std::endl;
+
+
 	birthdate = get_birthday();
 
 	while (true) {
