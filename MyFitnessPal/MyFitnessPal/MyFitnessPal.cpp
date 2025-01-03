@@ -27,6 +27,10 @@ void save_user(const std::string& username, const std::string& password, const s
 	std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
 }
 
+void delete_user(const std::string& target) {
+
+}
+
 void create_account() {
 	std::cout << "---------------------- REGISTRATION -----------------------" << std::endl;
 
