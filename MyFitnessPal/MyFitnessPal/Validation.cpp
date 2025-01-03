@@ -99,39 +99,39 @@ namespace InputIntegratedValidation {
 	}
 
 	int get_activity_level() {
-		std::cout << "-------------------------------------------------------\n";
-		std::cout << "1 - Sedentary (little to no exercise)\n";
-		std::cout << "2 - Light activity (exercise 1-3 days per week)\n";
-		std::cout << "3 - Moderate activity (exercise 3-5 days per week)\n";
-		std::cout << "4 - Active (exercise 6-7 days per week)\n";
-		std::cout << "5 - Very active (intense workouts or physical labor)\n";
-		std::cout << "#Guide: Type the number based on your activity.\n";
-		std::cout << "-------------------------------------------------------\n";
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
+		std::cout << "2 - Light activity (exercise 1-3 days per week)" << std::endl;
+		std::cout << "3 - Moderate activity (exercise 3-5 days per week)" << std::endl;
+		std::cout << "4 - Active (exercise 6-7 days per week)" << std::endl;
+		std::cout << "5 - Very active (intense workouts or physical labor)" << std::endl;
+		std::cout << "#Guide: Type the number based on your activity." << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		int activity_level = get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
 		return activity_level - 1;
 	}
 
 	int get_goal() {
-		std::cout << "-------------------------------------------------------\n";
-		std::cout << "1 - Lose weight\n";
-		std::cout << "2 - Maintain weight\n";
-		std::cout << "3 - Gain weight\n";
-		std::cout << "#Guide: Type the number based on your goal.\n";
-		std::cout << "-------------------------------------------------------\n";
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "1 - Lose weight" << std::endl;
+		std::cout << "2 - Maintain weight" << std::endl;
+		std::cout << "3 - Gain weight" << std::endl;
+		std::cout << "#Guide: Type the number based on your goal." << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("Goal: ", 1, 3);
 	}
 
 	int get_rate(int goal) {
 		if (goal != 2) {
-			std::cout << "-------------------------------------------------------\n";
-			std::cout << "1 - 0.25 kg a week\n";
-			std::cout << "2 - 0.50 kg a week\n";
-			std::cout << "3 - 0.75 kg a week\n";
-			std::cout << "4 - 1 kg a week\n";
-			std::cout << "#Guide: Type the number based on your desired transformation rate.\n";
-			std::cout << "-------------------------------------------------------\n";
+			std::cout << "-----------------------------------------------------------" << std::endl;
+			std::cout << "1 - 0.25 kg a week" << std::endl;
+			std::cout << "2 - 0.50 kg a week" << std::endl;
+			std::cout << "3 - 0.75 kg a week" << std::endl;
+			std::cout << "4 - 1 kg a week" << std::endl;
+			std::cout << "#Guide: Type the number based on your desired transformation rate." << std::endl;
+			std::cout << "-----------------------------------------------------------" << std::endl;
 
 			int rate_choice = get_validated_input("Rate: ", 1, MAX_RATE);
 			int rate = TRANSFORMATION_RATES[rate_choice - 1];
@@ -141,11 +141,11 @@ namespace InputIntegratedValidation {
 	}
 
 	int get_account_type() {
-		std::cout << "-------------------------------------------------------\n";
-		std::cout << "----------------- CHOOSE ACCOUNT TYPE -----------------\n";
-		std::cout << "1 - Standard\n";
-		std::cout << "2 - Premium\n";
-		std::cout << "-------------------------------------------------------\n";
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "------------------- CHOOSE ACCOUNT TYPE -------------------" << std::endl;
+		std::cout << "1 - Standard" << std::endl;
+		std::cout << "2 - Premium" << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("AccountType: ", 1, 2);
 	}

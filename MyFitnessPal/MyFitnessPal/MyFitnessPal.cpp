@@ -28,7 +28,7 @@ void save_user(const std::string& username, const std::string& password, const s
 }
 
 void create_account() {
-	std::cout << "-------------------- REGISTRATION ---------------------" << std::endl;
+	std::cout << "---------------------- REGISTRATION -----------------------" << std::endl;
 
 	std::string username, password, gender, birthdate;
 	int age, height, activity_level, goal = 0, rate = 0, account;
@@ -48,7 +48,7 @@ void create_account() {
 		std::cerr << INVALID_PASSWORD << std::endl;
 	}
 
-	std::cout << "------------------ PERSONAL DETAILS -------------------" << std::endl;
+	std::cout << "-------------------- PERSONAL DETAILS ---------------------" << std::endl;
 	birthdate = InputIntegratedValidation::get_birthday();
 
 	while (true) {
@@ -92,19 +92,6 @@ void log_out() {
 	// logs out currently logged in user
 }
 
-void start_guide() {
-	std::cout << "-----------------------------------" << std::endl;
-	std::cout << "Welcome to MyFitnessPal" << std::endl;
-	std::cout << "-----------------------------------" << std::endl;
-}
-
-void command_line() {
-
-	std::string input;
-	std::cin >> input;
-
-
-}
 
 void print_logo() {
 	std::cout << "-----------------------------------------------------------" << std::endl;
@@ -115,10 +102,43 @@ void print_logo() {
 	std::cout << "|_|  |_|\\__, |_|   |_|\\__|_| |_|\\___||___/___/_|   \\__,_|_|" << std::endl;
 	std::cout << "        |___/                                              " << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
+
+}
+
+void delay(int milliseconds) {
+	clock_t start_time = clock();
+	while (clock() < start_time + milliseconds * CLOCKS_PER_SEC / 1000);
+}
+
+void simulate_loading_bar() {
+	const int bar_width = 42;
+	std::cout << "Loading: [";
+	for (int i = 0; i < bar_width; ++i) {
+		std::cout << "#";
+		std::cout.flush();
+		delay(25); 
+	}
+	delay(250);
+	std::cout << "] Done!" << std::endl;
+}
+
+void start_guide() {
+	print_logo();
+	
+	simulate_loading_bar();
+	std::cout << "\n----------------- Welcome to MyFitnessPal -----------------" << std::endl;
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	
+}
+
+void command_line() {
+
+	std::string input;
+	std::cin >> input;
+
 }
 
 void run() {
-	print_logo();
 	start_guide();
 
 }
@@ -126,7 +146,7 @@ void run() {
 
 int main()
 {
-	
-	//run();
+
+	run();
 	//create_account();
 }
