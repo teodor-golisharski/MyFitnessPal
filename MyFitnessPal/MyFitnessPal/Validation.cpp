@@ -1,31 +1,22 @@
-#pragma once
 #include <string>
 #include "ApplicationConstants.h"
-
-static std::vector<std::string> usernames;
-static std::vector<std::string> logs;
-
-void load_usernames() {
-	std::ifstream in_users(USERS_FILE_NAME);
-	if (!in_users) {
-		std::ofstream users(USERS_FILE_NAME);
-		users.close();
-	}
-	else {
-		std::string line;
-		while (std::getline(in_users, line)) {
-			size_t pos = line.find('%');
-			if (pos != std::string::npos) {
-
-				std::string username = line.substr(0, pos);
-				usernames.push_back(username);
-			}
-		}
-		in_users.close();
-	}
-}
+#include "DataLoader.cpp"
 
 namespace DataValidation {
+
+	bool username_exists(const std::string& username) {
+		for (size_t i = 0; i < usernames.size(); i++)
+		{
+			if (usernames[i] == username) {
+				return true;
+			}
+		}
+		return false;
+	}
+	bool password_checker(const std::string& username, const std::string& password) {
+		
+	}
+
 	bool validate_username(std::string& username) {
 
 		load_usernames();
@@ -35,16 +26,13 @@ namespace DataValidation {
 		if (username.find('%') != std::string::npos) {
 			return false;
 		}
-		for (size_t i = 0; i < usernames.size(); i++)
-		{
-			if (usernames[i] == username) {
-				return false;
-			}
+		if (!username_exists(username)) {
+			return false;
 		}
 		return true;
 	}
 
-	bool validate_password(std::string& password) {
+	bool validate_password(const std::string& password) {
 		if (password.find('%') != std::string::npos) {
 			return false;
 		}
@@ -81,7 +69,6 @@ namespace InputIntegratedValidation {
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 	}
-
 	int get_validated_input(const std::string& prompt, int min, int max) {
 		int choice;
 		while (true) {
@@ -97,7 +84,6 @@ namespace InputIntegratedValidation {
 			}
 		}
 	}
-
 	int get_activity_level() {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
@@ -111,7 +97,6 @@ namespace InputIntegratedValidation {
 		int activity_level = get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
 		return activity_level - 1;
 	}
-
 	int get_goal() {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Lose weight" << std::endl;
@@ -122,7 +107,6 @@ namespace InputIntegratedValidation {
 
 		return get_validated_input("Goal: ", 1, 3);
 	}
-
 	int get_rate(int goal) {
 		if (goal != 2) {
 			std::cout << "-----------------------------------------------------------" << std::endl;
@@ -139,7 +123,6 @@ namespace InputIntegratedValidation {
 		}
 		return 0;
 	}
-
 	int get_account_type() {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "------------------- CHOOSE ACCOUNT TYPE -------------------" << std::endl;

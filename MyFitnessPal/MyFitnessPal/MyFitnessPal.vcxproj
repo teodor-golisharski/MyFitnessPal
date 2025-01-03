@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="DataLoader.cpp" />
     <ClCompile Include="MyFitnessPal.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -85,7 +85,7 @@ void delete_account(std::string username, std::string password) {
 }
 
 void log_in(std::string username, std::string password) {
-	// logs in existing user
+	bool username_exists_status = !DataValidation::username_exists(username);
 }
 
 void log_out() {
@@ -109,32 +109,47 @@ void delay(int milliseconds) {
 	clock_t start_time = clock();
 	while (clock() < start_time + milliseconds * CLOCKS_PER_SEC / 1000);
 }
-
 void simulate_loading_bar() {
 	const int bar_width = 42;
 	std::cout << "Loading: [";
 	for (int i = 0; i < bar_width; ++i) {
 		std::cout << "#";
 		std::cout.flush();
-		delay(25); 
+		delay(25);
 	}
 	delay(250);
 	std::cout << "] Done!" << std::endl;
 }
-
 void start_guide() {
 	print_logo();
-	
+
 	simulate_loading_bar();
 	std::cout << "\n----------------- Welcome to MyFitnessPal -----------------" << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
-	
+
 }
 
 void command_line() {
 
 	std::string input;
 	std::cin >> input;
+	while (true)
+	{
+		if (input == "exit") {
+
+		}
+		if (current_user.empty()) {
+			if (input == "register") {
+				create_account();
+			}
+			else if (input == "login") {
+
+			}
+			else {
+				std::cerr << INVALID_COMMAND << std::endl;
+			}
+		}
+	}
 
 }
 
