@@ -5,11 +5,16 @@
 #include "ErrorMessages.hpp"
 #include "Validation.cpp"
 
-static double bmr = 0;
-static int maintainCalories = 0;
-static int additional = 0;
+std::string current_user = "";
+std::string current_password = "";
+std::string current_gender = "";
+int current_age = 0;
+int current_height = 0;
+int current_weight = 0;
 
-static std::string current_user = "";
+double bmr = 0;
+int maintainCalories = 0;
+int additional = 0;
 
 void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	const std::string& gender, int height, double weight,
@@ -90,6 +95,22 @@ void delete_account(std::string username, std::string password) {
 
 void log_in(std::string username, std::string password) {
 	bool username_exists_status = !DataValidation::username_exists(username);
+
+	std::ifstream file(USERS_FILE_NAME);
+
+	if (!file.is_open()) {
+		std::cerr << FILE_NOT_FOUND << std::endl;
+		return;
+	}
+	std::string line;
+	while (std::getline(file, line)) {
+		size_t pos = line.find('%');
+		if (pos != std::string::npos) {
+			std::string username = line.substr(0, pos);
+			usernames.push_back(username);
+		}
+	}
+	file.close();
 }
 
 void log_out() {

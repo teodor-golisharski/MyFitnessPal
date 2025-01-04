@@ -1,6 +1,6 @@
 #include <string>
 #include "ApplicationConstants.h"
-#include "DataLoader.cpp"
+#include "DataLoader.h"
 
 namespace DataValidation {
 
@@ -14,7 +14,7 @@ namespace DataValidation {
 		return false;
 	}
 	bool password_checker(const std::string& username, const std::string& password) {
-		
+		return true;
 	}
 
 	bool validate_username(std::string& username) {

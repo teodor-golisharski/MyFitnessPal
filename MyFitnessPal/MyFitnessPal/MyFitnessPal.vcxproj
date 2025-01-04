@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationConstants.h" />
+    <ClInclude Include="DataLoader.h" />
     <ClInclude Include="ErrorMessages.hpp" />
     <ClInclude Include="Validation.cpp" />
   </ItemGroup>

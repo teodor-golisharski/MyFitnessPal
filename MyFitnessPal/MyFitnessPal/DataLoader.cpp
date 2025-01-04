@@ -1,11 +1,7 @@
-#include <iostream>
-#include <vector>
 #include <fstream>
 #include "ApplicationConstants.h"
+#include "DataLoader.h"
 
-static std::vector<std::string> usernames;
-static std::vector<std::string> users;
-static std::vector<std::string> logs;
 
 void load_usernames() {
 	std::ifstream in_users(USERS_FILE_NAME);
