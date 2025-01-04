@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 #include "ErrorMessages.hpp"
-#include "Validation.cpp"
+#include "DataValidation.cpp"
 
 std::string current_user = "";
 std::string current_password = "";
@@ -11,6 +11,8 @@ std::string current_gender = "";
 int current_age = 0;
 int current_height = 0;
 int current_weight = 0;
+
+
 
 double bmr = 0;
 int maintainCalories = 0;
@@ -94,23 +96,79 @@ void delete_account(std::string username, std::string password) {
 }
 
 void log_in(std::string username, std::string password) {
-	bool username_exists_status = !DataValidation::username_exists(username);
-
 	std::ifstream file(USERS_FILE_NAME);
 
 	if (!file.is_open()) {
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
+
 	std::string line;
+	bool found = false;
+
 	while (std::getline(file, line)) {
-		size_t pos = line.find('%');
-		if (pos != std::string::npos) {
-			std::string username = line.substr(0, pos);
-			usernames.push_back(username);
+		size_t pos_username = line.find('%');
+		if (pos_username == std::string::npos) {
+			continue;
+		}
+
+		std::string file_username = line.substr(0, pos_username);
+
+		size_t pos_password = line.find('%', pos_username + 1);
+		if (pos_password == std::string::npos) {
+			continue; 
+		}
+		std::string file_password = line.substr(pos_username + 1, pos_password - pos_username - 1);
+
+		if (file_username == username && file_password == password) {
+			found = true;
+
+			current_user = username;
+			current_password = password;
+
+			size_t start = pos_password + 1;
+			size_t end = line.find('%', start);
+			std::string current_birthday = line.substr(start, end - start);
+			current_age = DataOperations::calculate_age(current_birthday);
+
+			start = end + 1;
+			end = line.find('%', start);
+			current_gender = line.substr(start, end - start);
+
+			start = end + 1;
+			end = line.find('%', start);
+			current_height = std::stoi(line.substr(start, end - start));
+
+			start = end + 1;
+			end = line.find('%', start);
+			current_weight = std::stoi(line.substr(start, end - start));
+
+			/*start = end + 1;
+			end = line.find('%', start);
+			current_activity_level = std::stoi(line.substr(start, end - start));
+
+			start = end + 1;
+			end = line.find('%', start);
+			current_goal = std::stoi(line.substr(start, end - start));
+
+			start = end + 1;
+			end = line.find('%', start);
+			current_calorie_balance = std::stoi(line.substr(start, end - start));
+
+			start = end + 1;
+			current_exercise_level = std::stoi(line.substr(start));
+			break;*/
 		}
 	}
+
 	file.close();
+
+	if (found) {
+		std::cout << "Login successful! Welcome, " << username << "!" << std::endl;
+	}
+	else {
+		std::cerr << "Invalid username or password!" << std::endl;
+	}
 }
 
 void log_out() {

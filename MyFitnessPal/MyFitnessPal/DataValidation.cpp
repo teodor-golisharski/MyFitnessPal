@@ -13,10 +13,6 @@ namespace DataValidation {
 		}
 		return false;
 	}
-	bool password_checker(const std::string& username, const std::string& password) {
-		return true;
-	}
-
 	bool validate_username(std::string& username) {
 
 		load_usernames();
@@ -31,14 +27,12 @@ namespace DataValidation {
 		}
 		return true;
 	}
-
 	bool validate_password(const std::string& password) {
 		if (password.find('%') != std::string::npos) {
 			return false;
 		}
 		return true;
 	}
-
 	bool is_valid_date(int year, int month, int day) {
 		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31) {
 			return false;
@@ -55,6 +49,7 @@ namespace DataValidation {
 }
 
 namespace InputIntegratedValidation {
+
 	std::string get_birthday() {
 		int year, month, day;
 		while (true) {
@@ -131,6 +126,23 @@ namespace InputIntegratedValidation {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("AccountType: ", 1, 2);
+	}
+}
+
+namespace DataOperations {
+
+	int calculate_age(const std::string& birthdate) {
+		int year, month, day;
+		sscanf(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
+
+		time_t t = time(0);
+		tm* now = localtime(&t);
+
+		int age = now->tm_year + 1900 - year;
+		if (now->tm_mon + 1 < month || (now->tm_mon + 1 == month && now->tm_mday < day)) {
+			--age;
+		}
+		return age;
 	}
 }
 
