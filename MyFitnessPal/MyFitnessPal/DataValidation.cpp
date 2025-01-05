@@ -133,15 +133,16 @@ namespace DataOperations {
 
 	int calculate_age(const std::string& birthdate) {
 		int year, month, day;
-		sscanf(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
+		sscanf_s(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
 
 		time_t t = time(0);
-		tm* now = localtime(&t);
-
-		int age = now->tm_year + 1900 - year;
-		if (now->tm_mon + 1 < month || (now->tm_mon + 1 == month && now->tm_mday < day)) {
+		tm now;
+		localtime_s(&now, &t); 
+		int age = now.tm_year + 1900 - year;
+		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day)) {
 			--age;
 		}
+
 		return age;
 	}
 }
