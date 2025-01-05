@@ -248,7 +248,7 @@ int main()
 	//run();
 	//create_account();
 
-	std::cout << DataOperations::calculate_age("2004-02-02") << std::endl;
+	//std::cout << DataOperations::calculate_age("2004-02-02") << std::endl;
 	std::cout << DataOperations::calculate_age("2010-03-17") << std::endl;
 	std::cout << DataOperations::calculate_age("1975-01-06") << std::endl;
 }
