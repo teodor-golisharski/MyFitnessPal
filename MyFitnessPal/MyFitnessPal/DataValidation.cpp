@@ -5,34 +5,37 @@
 namespace DataValidation {
 
 	bool username_exists(const std::string& username) {
-		for (size_t i = 0; i < usernames.size(); i++)
+		for (const auto& stored_username : usernames)
 		{
-			if (usernames[i] == username) {
+			if (stored_username == username) {
 				return true;
 			}
 		}
 		return false;
 	}
+
 	bool validate_username(std::string& username) {
 
 		load_usernames();
-		if (usernames.size() == 0) {
-			return true;
+		if (usernames.empty()) {
+			return true; 
 		}
 		if (username.find('%') != std::string::npos) {
 			return false;
 		}
-		if (!username_exists(username)) {
+		if (username_exists(username)) {
 			return false;
 		}
 		return true;
 	}
+
 	bool validate_password(const std::string& password) {
 		if (password.find('%') != std::string::npos) {
 			return false;
 		}
 		return true;
 	}
+
 	bool is_valid_date(int year, int month, int day) {
 		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31) {
 			return false;

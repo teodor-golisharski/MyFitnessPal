@@ -11,7 +11,10 @@ std::string current_gender = "";
 int current_age = 0;
 int current_height = 0;
 int current_weight = 0;
-
+int current_activity_level = 0;
+int current_goal = 0;
+int current_rate = 0;
+int current_account = 0;
 
 
 double bmr = 0;
@@ -27,7 +30,7 @@ void save_user(const std::string& username, const std::string& password, const s
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
-	file << "\n" << username << "%" << password << "%" << birthdate << "%"
+	file << username << "%" << password << "%" << birthdate << "%"
 		<< gender << "%" << height << "%" << weight << "%"
 		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
 	file.close();
@@ -143,7 +146,7 @@ void log_in(std::string username, std::string password) {
 			end = line.find('%', start);
 			current_weight = std::stoi(line.substr(start, end - start));
 
-			/*start = end + 1;
+			start = end + 1;
 			end = line.find('%', start);
 			current_activity_level = std::stoi(line.substr(start, end - start));
 
@@ -151,7 +154,7 @@ void log_in(std::string username, std::string password) {
 			end = line.find('%', start);
 			current_goal = std::stoi(line.substr(start, end - start));
 
-			start = end + 1;
+			/*start = end + 1;
 			end = line.find('%', start);
 			current_calorie_balance = std::stoi(line.substr(start, end - start));
 
@@ -245,10 +248,10 @@ void run() {
 int main()
 {
 
-	//run();
-	//create_account();
+	run();
+	create_account();
 
 	//std::cout << DataOperations::calculate_age("2004-02-02") << std::endl;
-	std::cout << DataOperations::calculate_age("2010-03-17") << std::endl;
-	std::cout << DataOperations::calculate_age("1975-01-06") << std::endl;
+	//std::cout << DataOperations::calculate_age("2010-03-17") << std::endl;
+	//std::cout << DataOperations::calculate_age("1975-01-06") << std::endl;
 }

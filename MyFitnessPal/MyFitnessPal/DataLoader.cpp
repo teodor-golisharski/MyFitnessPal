@@ -2,6 +2,9 @@
 #include "ApplicationConstants.h"
 #include "DataLoader.h"
 
+std::vector<std::string> usernames;
+std::vector<std::string> users;
+std::vector<std::string> logs;
 
 void load_usernames() {
 	std::ifstream in_users(USERS_FILE_NAME);
