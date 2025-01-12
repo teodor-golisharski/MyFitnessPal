@@ -52,7 +52,6 @@ namespace DataValidation {
 }
 
 namespace InputIntegratedValidation {
-
 	std::string get_birthday() {
 		int year, month, day;
 		while (true) {
@@ -82,6 +81,16 @@ namespace InputIntegratedValidation {
 			}
 		}
 	}
+	int get_gender() {
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "1 - Male" << std::endl;
+		std::cout << "2 - Female" << std::endl;
+		std::cout << "#Guide: Type the corresponding number." << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
+
+		return get_validated_input("Gender: ", 1, 2);
+	}
+
 	int get_activity_level() {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
@@ -89,18 +98,17 @@ namespace InputIntegratedValidation {
 		std::cout << "3 - Moderate activity (exercise 3-5 days per week)" << std::endl;
 		std::cout << "4 - Active (exercise 6-7 days per week)" << std::endl;
 		std::cout << "5 - Very active (intense workouts or physical labor)" << std::endl;
-		std::cout << "#Guide: Type the number based on your activity." << std::endl;
+		std::cout << "#Guide: Type the number corresponding to your activity." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
-		int activity_level = get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
-		return activity_level - 1;
+		return get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
 	}
 	int get_goal() {
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Lose weight" << std::endl;
 		std::cout << "2 - Maintain weight" << std::endl;
 		std::cout << "3 - Gain weight" << std::endl;
-		std::cout << "#Guide: Type the number based on your goal." << std::endl;
+		std::cout << "#Guide: Type the number corresponding to your goal." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("Goal: ", 1, 3);
@@ -112,7 +120,7 @@ namespace InputIntegratedValidation {
 			std::cout << "2 - 0.50 kg a week" << std::endl;
 			std::cout << "3 - 0.75 kg a week" << std::endl;
 			std::cout << "4 - 1 kg a week" << std::endl;
-			std::cout << "#Guide: Type the number based on your desired transformation rate." << std::endl;
+			std::cout << "#Guide: Type the number corresponding to your desired transformation rate." << std::endl;
 			std::cout << "-----------------------------------------------------------" << std::endl;
 
 			int rate_choice = get_validated_input("Rate: ", 1, MAX_RATE);
@@ -147,6 +155,19 @@ namespace DataOperations {
 		}
 
 		return age;
+	}
+
+	double calculate_bmr(int gender, double weight, int height, int age, int activity_level) {
+		
+		double weight_index = gender == 1 ? 13.397 : 9.247;
+		double height_index = gender == 1 ? 4.799 : 3.098;
+		double age_index = gender == 1 ? 5.677 : 4.330;
+
+		double bmr = gender == 1 ? 88.362 : 447.593;
+		bmr += weight_index * weight + height_index * height - age_index * age;
+		bmr *= ACTIVITY_LEVELS[activity_level];
+
+		return bmr;
 	}
 }
 

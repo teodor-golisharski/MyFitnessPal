@@ -2,12 +2,12 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "ErrorMessages.hpp"
+#include "ErrorMessages.h"
 #include "DataValidation.cpp"
 
 std::string current_user = "";
 std::string current_password = "";
-std::string current_gender = "";
+int current_gender = 0;
 int current_age = 0;
 int current_height = 0;
 int current_weight = 0;
@@ -16,13 +16,12 @@ int current_goal = 0;
 int current_rate = 0;
 int current_account = 0;
 
-
 double bmr = 0;
 int maintainCalories = 0;
 int additional = 0;
 
 void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
-	const std::string& gender, int height, double weight,
+	int gender, int height, double weight,
 	int activity_level, int goal, int rate, int account) {
 	std::ofstream file(USERS_FILE_NAME, std::ios::app);
 
@@ -44,8 +43,8 @@ void delete_user(const std::string& target) {
 void create_account() {
 	std::cout << "---------------------- REGISTRATION -----------------------" << std::endl;
 
-	std::string username, password, gender, birthdate;
-	int age, height, activity_level, goal = 0, rate = 0, account;
+	std::string username, password, birthdate;
+	int age, height, gender, activity_level, goal = 0, rate = 0, account;
 	double weight;
 
 	while (true) {
@@ -65,12 +64,7 @@ void create_account() {
 	std::cout << "-------------------- PERSONAL DETAILS ---------------------" << std::endl;
 	birthdate = InputIntegratedValidation::get_birthday();
 
-	while (true) {
-		std::cout << "Gender (male/female): ";
-		std::cin >> gender;
-		if (gender == "male" || gender == "female") break;
-		std::cerr << INVALID_GENDER << std::endl;
-	}
+	gender = InputIntegratedValidation::get_gender();
 
 	std::cout << "Height (in cm): ";
 	while (!(std::cin >> height) || height <= 0) {
@@ -119,7 +113,7 @@ void log_in(std::string username, std::string password) {
 
 		size_t pos_password = line.find('%', pos_username + 1);
 		if (pos_password == std::string::npos) {
-			continue; 
+			continue;
 		}
 		std::string file_password = line.substr(pos_username + 1, pos_password - pos_username - 1);
 
@@ -136,7 +130,7 @@ void log_in(std::string username, std::string password) {
 
 			start = end + 1;
 			end = line.find('%', start);
-			current_gender = line.substr(start, end - start);
+			current_gender = std::stoi(line.substr(start, end - start));
 
 			start = end + 1;
 			end = line.find('%', start);
@@ -154,23 +148,25 @@ void log_in(std::string username, std::string password) {
 			end = line.find('%', start);
 			current_goal = std::stoi(line.substr(start, end - start));
 
-			/*start = end + 1;
+			start = end + 1;
 			end = line.find('%', start);
-			current_calorie_balance = std::stoi(line.substr(start, end - start));
+			current_rate = std::stoi(line.substr(start, end - start));
 
 			start = end + 1;
-			current_exercise_level = std::stoi(line.substr(start));
-			break;*/
+			current_account = std::stoi(line.substr(start));
+			break;
+
+
 		}
 	}
 
 	file.close();
 
 	if (found) {
-		std::cout << "Login successful! Welcome, " << username << "!" << std::endl;
+		std::cout << LOGIN_SUCCESSFUL << username << "!" << std::endl;
 	}
 	else {
-		std::cerr << "Invalid username or password!" << std::endl;
+		std::cerr << INVALID_USERNAME_OR_PASSWORD << std::endl;
 	}
 }
 
@@ -216,7 +212,7 @@ void start_guide() {
 }
 
 void command_line() {
-
+	std::cout << "Command: ";
 	std::string input;
 	std::cin >> input;
 	while (true)
@@ -229,12 +225,20 @@ void command_line() {
 				create_account();
 			}
 			else if (input == "login") {
-
+				std::string username_input, password_input;
+				std::cout << "Username: ";
+				std::cin >> username_input;
+				std::cout << "Password: ";
+				std::cin >> password_input;
+				
+				log_in(username_input, password_input);
 			}
 			else {
 				std::cerr << INVALID_COMMAND << std::endl;
 			}
 		}
+		std::cout << "Command: ";
+		std::cin >> input;
 	}
 
 }
