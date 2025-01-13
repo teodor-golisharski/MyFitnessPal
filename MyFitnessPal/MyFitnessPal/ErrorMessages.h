@@ -14,7 +14,7 @@ const std::string INVALID_HEIGHT = "Invalid height. Please enter a positive numb
 
 // General errors
 const std::string FILE_NOT_FOUND = "Error! File was not found.";
-const std::string INVALID_COMMAND = "Command was not recognized! Type help for additional guidance.";
+const std::string INVALID_COMMAND = "Command not recognized! Type help for additional guidance.";
 
 // Success messages
 const std::string ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully! Welcome to MyFitnessPal, ";

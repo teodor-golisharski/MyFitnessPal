@@ -16,9 +16,7 @@ int current_goal = 0;
 int current_rate = 0;
 int current_account = 0;
 
-double bmr = 0;
-int maintainCalories = 0;
-int additional = 0;
+int bmr = 0;
 
 void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	int gender, int height, double weight,
@@ -154,9 +152,19 @@ void log_in(std::string username, std::string password) {
 
 			start = end + 1;
 			current_account = std::stoi(line.substr(start));
+
+			bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
+			std::cout << current_user << std::endl;
+			std::cout << current_password << std::endl;
+			std::cout << current_age << std::endl;
+			std::cout << current_height << std::endl;
+			std::cout << current_weight << std::endl;
+			std::cout << current_activity_level << std::endl;
+			std::cout << current_goal << std::endl;
+			std::cout << current_rate << std::endl;
+			std::cout << current_account << std::endl;
+			std::cout << bmr << std::endl;
 			break;
-
-
 		}
 	}
 
@@ -171,7 +179,18 @@ void log_in(std::string username, std::string password) {
 }
 
 void log_out() {
-	// logs out currently logged in user
+	current_user = "";
+	current_password = "";
+	current_gender = 0;
+	current_age = 0;
+	current_height = 0;
+	current_weight = 0;
+	current_activity_level = 0;
+	current_goal = 0;
+	current_rate = 0;
+	current_account = 0;
+
+	bmr = 0;
 }
 
 
@@ -186,7 +205,6 @@ void print_logo() {
 	std::cout << "-----------------------------------------------------------" << std::endl;
 
 }
-
 void delay(int milliseconds) {
 	clock_t start_time = clock();
 	while (clock() < start_time + milliseconds * CLOCKS_PER_SEC / 1000);
@@ -202,13 +220,37 @@ void simulate_loading_bar() {
 	delay(250);
 	std::cout << "] Done!" << std::endl;
 }
+void help_guide() {
+
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "------------------------ HELP MENU ------------------------" << std::endl;
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "\nAvailable Commands:" << std::endl;
+	if (current_user.empty()) {
+		std::cout << " + help     |  Display this help guide." << std::endl;
+		std::cout << " + signin   |  Create a new account to start tracking" << std::endl;
+		std::cout << "            |  your fitness journey." << std::endl;
+		std::cout << " + login    |  Log in to your existing account to access" << std::endl;
+		std::cout << "            |  personalized features." << std::endl;
+		std::cout << " + exit     |  Exit the application." << std::endl;
+		std::cout << "\n-----------------------------------------------------------" << std::endl;
+		std::cout << "Note: You need to log in or sign up to use more features." << std::endl;
+		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
+	}
+	else {
+
+	}
+	std::cout << "-----------------------------------------------------------" << std::endl;;
+	std::cout << "" << std::endl;
+}
 void start_guide() {
 	print_logo();
-
+	
 	simulate_loading_bar();
 	std::cout << "\n----------------- Welcome to MyFitnessPal -----------------" << std::endl;
-	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "-----------------------------------------------------------\n" << std::endl;
 
+	help_guide();
 }
 
 void command_line() {
@@ -218,7 +260,16 @@ void command_line() {
 	while (true)
 	{
 		if (input == "exit") {
-
+			std::cout << "Exiting";
+			for (int i = 0; i < 3; ++i) {
+				std::cout << ".";
+				std::cout.flush();
+				delay(25);
+			}
+			return;
+		}
+		if (input == "help") {
+			help_guide();
 		}
 		if (current_user.empty()) {
 			if (input == "register") {
@@ -230,13 +281,17 @@ void command_line() {
 				std::cin >> username_input;
 				std::cout << "Password: ";
 				std::cin >> password_input;
-				
+
 				log_in(username_input, password_input);
 			}
 			else {
 				std::cerr << INVALID_COMMAND << std::endl;
 			}
 		}
+		else {
+			std::cerr << INVALID_COMMAND << std::endl;
+		}
+
 		std::cout << "Command: ";
 		std::cin >> input;
 	}
@@ -245,7 +300,7 @@ void command_line() {
 
 void run() {
 	start_guide();
-
+	command_line();
 }
 
 
@@ -253,7 +308,6 @@ int main()
 {
 
 	run();
-	create_account();
 
 	//std::cout << DataOperations::calculate_age("2004-02-02") << std::endl;
 	//std::cout << DataOperations::calculate_age("2010-03-17") << std::endl;

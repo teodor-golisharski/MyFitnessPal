@@ -120,7 +120,7 @@ namespace InputIntegratedValidation {
 			std::cout << "2 - 0.50 kg a week" << std::endl;
 			std::cout << "3 - 0.75 kg a week" << std::endl;
 			std::cout << "4 - 1 kg a week" << std::endl;
-			std::cout << "#Guide: Type the number corresponding to your desired transformation rate." << std::endl;
+			std::cout << "#Guide: Type the number corresponding to your desired \ntransformation rate." << std::endl;
 			std::cout << "-----------------------------------------------------------" << std::endl;
 
 			int rate_choice = get_validated_input("Rate: ", 1, MAX_RATE);
@@ -157,7 +157,7 @@ namespace DataOperations {
 		return age;
 	}
 
-	double calculate_bmr(int gender, double weight, int height, int age, int activity_level) {
+	int calculate_bmr(int gender, double weight, int height, int age, int activity_level) {
 		
 		double weight_index = gender == 1 ? 13.397 : 9.247;
 		double height_index = gender == 1 ? 4.799 : 3.098;
@@ -166,8 +166,8 @@ namespace DataOperations {
 		double bmr = gender == 1 ? 88.362 : 447.593;
 		bmr += weight_index * weight + height_index * height - age_index * age;
 		bmr *= ACTIVITY_LEVELS[activity_level];
-
-		return bmr;
+		
+		return (int)bmr;
 	}
 }
 
