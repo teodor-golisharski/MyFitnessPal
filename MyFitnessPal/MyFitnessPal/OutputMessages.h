@@ -19,3 +19,4 @@ const std::string INVALID_COMMAND = "Command not recognized! Type help for addit
 // Success messages
 const std::string ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully! Welcome to MyFitnessPal, ";
 const std::string LOGIN_SUCCESSFUL = "Login successful! Welcome, ";
+const std::string ACCOUNT_DELETED_SUCCESSFULLY = "Account deleted successfully! Goodbye for now :(";

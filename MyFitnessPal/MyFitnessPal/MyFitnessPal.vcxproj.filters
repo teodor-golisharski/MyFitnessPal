@@ -23,7 +23,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ErrorMessages.h">
+    <ClInclude Include="OutputMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataValidation.cpp">

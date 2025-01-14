@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "ErrorMessages.h"
+#include "OutputMessages.h"
 #include "DataValidation.cpp"
 
 std::string current_user = "";
@@ -31,11 +31,6 @@ void save_user(const std::string& username, const std::string& password, const s
 		<< gender << "%" << height << "%" << weight << "%"
 		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
 	file.close();
-	std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
-}
-
-void delete_user(const std::string& target) {
-
 }
 
 void create_account() {
@@ -84,10 +79,45 @@ void create_account() {
 	account = InputIntegratedValidation::get_account_type();
 
 	save_user(username, password, birthdate, gender, height, weight, activity_level, goal, rate, account);
+	std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
 }
 
-void delete_account(std::string username, std::string password) {
-	// Deleting account
+void delete_account() {
+	std::vector<std::string> active_users;
+
+	std::ifstream input_file(USERS_FILE_NAME);
+	if (!input_file) {
+		std::cerr << "Error: Could not open file.\n";
+		return;
+	}
+
+	std::string line;
+	bool userFound = false;
+
+	while (std::getline(input_file, line)) {
+		size_t first_delim = line.find('%');
+		size_t second_delim = line.find('%', first_delim + 1);
+
+		std::string temp_username = line.substr(0, first_delim);
+		std::string temp_password = line.substr(first_delim + 1, second_delim - first_delim - 1);
+
+		if (temp_username == current_user && temp_password == current_password) {
+			userFound = true; 
+		}
+		else {
+			active_users.push_back(line);
+		}
+	}
+
+	input_file.close();
+	std::ofstream temp_file(USERS_FILE_NAME, std::ios::trunc);
+
+	for (const std::string& cur_user : active_users) {
+		temp_file << cur_user << "\n";
+	}
+
+	temp_file.close();
+	std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
 }
 
 void log_in(std::string username, std::string password) {
@@ -228,7 +258,7 @@ void help_guide() {
 	std::cout << "\nAvailable Commands:" << std::endl;
 	if (current_user.empty()) {
 		std::cout << " + help     |  Display this help guide." << std::endl;
-		std::cout << " + signin   |  Create a new account to start tracking" << std::endl;
+		std::cout << " + signup   |  Create a new account to start tracking" << std::endl;
 		std::cout << "            |  your fitness journey." << std::endl;
 		std::cout << " + login    |  Log in to your existing account to access" << std::endl;
 		std::cout << "            |  personalized features." << std::endl;
@@ -238,14 +268,21 @@ void help_guide() {
 		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
 	}
 	else {
-
+		std::cout << " + help     |  Display this help guide." << std::endl;
+		std::cout << " + signup   |  Create a new account to start tracking." << std::endl;
+		std::cout << "            |  your fitness journey." << std::endl;
+		std::cout << " + login    |  Log in to your existing account to access." << std::endl;
+		std::cout << "            |  personalized features." << std::endl;
+		std::cout << " + exit     |  Exit the application." << std::endl;
+		std::cout << "\n-----------------------------------------------------------" << std::endl;
+		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
 	}
 	std::cout << "-----------------------------------------------------------" << std::endl;;
 	std::cout << "" << std::endl;
 }
 void start_guide() {
 	print_logo();
-	
+
 	simulate_loading_bar();
 	std::cout << "\n----------------- Welcome to MyFitnessPal -----------------" << std::endl;
 	std::cout << "-----------------------------------------------------------\n" << std::endl;
@@ -268,11 +305,11 @@ void command_line() {
 			}
 			return;
 		}
-		if (input == "help") {
+		else if (input == "help") {
 			help_guide();
 		}
-		if (current_user.empty()) {
-			if (input == "register") {
+		else if (current_user.empty()) {
+			if (input == "signup") {
 				create_account();
 			}
 			else if (input == "login") {
@@ -287,6 +324,24 @@ void command_line() {
 			else {
 				std::cerr << INVALID_COMMAND << std::endl;
 			}
+		}
+		else if (!current_user.empty()) {
+			if (input == "log_out") {
+				log_out();
+			}
+			else if (input == "delete_account") {
+				delete_account();
+			}
+			else if (input == "edit_profile") {
+
+			}
+			else if (input == "add_nutrition") {
+
+			}
+			else if (input == "add_exercise") {
+
+			}
+			
 		}
 		else {
 			std::cerr << INVALID_COMMAND << std::endl;
@@ -306,10 +361,5 @@ void run() {
 
 int main()
 {
-
 	run();
-
-	//std::cout << DataOperations::calculate_age("2004-02-02") << std::endl;
-	//std::cout << DataOperations::calculate_age("2010-03-17") << std::endl;
-	//std::cout << DataOperations::calculate_age("1975-01-06") << std::endl;
 }
