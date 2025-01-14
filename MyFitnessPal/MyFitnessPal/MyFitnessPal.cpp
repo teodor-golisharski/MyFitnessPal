@@ -7,6 +7,8 @@
 
 std::string current_user = "";
 std::string current_password = "";
+std::string current_birthday = "";
+
 int current_gender = 0;
 int current_age = 0;
 int current_height = 0;
@@ -40,39 +42,14 @@ void create_account() {
 	int age, height, gender, activity_level, goal = 0, rate = 0, account;
 	double weight;
 
-	while (true) {
-		std::cout << "Username: ";
-		std::cin >> username;
-		if (DataValidation::validate_username(username)) break;
-		std::cerr << INVALID_USERNAME << std::endl;
-	}
-
-	while (true) {
-		std::cout << "Password: ";
-		std::cin >> password;
-		if (DataValidation::validate_password(password)) break;
-		std::cerr << INVALID_PASSWORD << std::endl;
-	}
+	username = InputIntegratedValidation::get_username();
+	password = InputIntegratedValidation::get_password();
 
 	std::cout << "-------------------- PERSONAL DETAILS ---------------------" << std::endl;
 	birthdate = InputIntegratedValidation::get_birthday();
-
 	gender = InputIntegratedValidation::get_gender();
-
-	std::cout << "Height (in cm): ";
-	while (!(std::cin >> height) || height <= 0) {
-		std::cerr << INVALID_HEIGHT;
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-
-	std::cout << "Weight (in kg): ";
-	while (!(std::cin >> weight) || weight <= 0) {
-		std::cerr << INVALID_WEIGHT;
-		std::cin.clear();
-		std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-	}
-
+	height = InputIntegratedValidation::get_height();
+	weight = InputIntegratedValidation::get_weight();
 	activity_level = InputIntegratedValidation::get_activity_level();
 	goal = InputIntegratedValidation::get_goal();
 	rate = InputIntegratedValidation::get_rate(goal);
@@ -102,7 +79,7 @@ void delete_account() {
 		std::string temp_password = line.substr(first_delim + 1, second_delim - first_delim - 1);
 
 		if (temp_username == current_user && temp_password == current_password) {
-			userFound = true; 
+			userFound = true;
 		}
 		else {
 			active_users.push_back(line);
@@ -118,6 +95,45 @@ void delete_account() {
 
 	temp_file.close();
 	std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
+}
+
+void edit_profile() {
+	int option = InputIntegratedValidation::get_profile_info();
+
+	std::string parameter = PROFILE_INFORMATION[option - 1];
+	std::string new_line = "";
+
+	std::string target_user = current_user;
+	std::string target_password = current_password;
+
+	if (parameter == "username") {
+		target_user = InputIntegratedValidation::get_username();
+	}
+	else if (parameter == "password") {
+		target_password = InputIntegratedValidation::get_password();
+	}
+	else if (parameter == "height") {
+		current_height = InputIntegratedValidation::get_height();
+	}
+	else if (parameter == "weight") {
+		current_weight = InputIntegratedValidation::get_weight();
+	}
+	else if (parameter == "activity_level") {
+		current_activity_level = InputIntegratedValidation::get_activity_level();
+	}
+	else if (parameter == "goal") {
+		current_goal = InputIntegratedValidation::get_goal();
+	}
+	else if (parameter == "rate") {
+		current_rate = InputIntegratedValidation::get_rate(current_goal);
+	}
+	else if (parameter == "account") {
+		current_account = InputIntegratedValidation::get_account_type();
+	}
+
+	delete_account();
+	save_user(target_user, target_password, current_birthday, current_gender, current_height, current_weight, current_activity_level, current_goal, current_rate, current_account);
+	std::cout << PROFILE_SAVE_CHANGES << std::endl;
 }
 
 void log_in(std::string username, std::string password) {
@@ -153,7 +169,7 @@ void log_in(std::string username, std::string password) {
 
 			size_t start = pos_password + 1;
 			size_t end = line.find('%', start);
-			std::string current_birthday = line.substr(start, end - start);
+			current_birthday = line.substr(start, end - start);
 			current_age = DataOperations::calculate_age(current_birthday);
 
 			start = end + 1;
@@ -333,7 +349,7 @@ void command_line() {
 				delete_account();
 			}
 			else if (input == "edit_profile") {
-
+				edit_profile();
 			}
 			else if (input == "add_nutrition") {
 
@@ -341,7 +357,7 @@ void command_line() {
 			else if (input == "add_exercise") {
 
 			}
-			
+
 		}
 		else {
 			std::cerr << INVALID_COMMAND << std::endl;

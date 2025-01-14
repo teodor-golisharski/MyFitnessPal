@@ -18,7 +18,7 @@ namespace DataValidation {
 
 		load_usernames();
 		if (usernames.empty()) {
-			return true; 
+			return true;
 		}
 		if (username.find('%') != std::string::npos) {
 			return false;
@@ -52,6 +52,52 @@ namespace DataValidation {
 }
 
 namespace InputIntegratedValidation {
+	std::string get_username() {
+
+		std::string username;
+		while (true) {
+			std::cout << "Username: ";
+			std::cin >> username;
+			if (DataValidation::validate_username(username)) break;
+			std::cerr << INVALID_USERNAME << std::endl;
+		}
+		return username;
+	}
+	std::string get_password() {
+
+		std::string password;
+		while (true) {
+			std::cout << "Password: ";
+			std::cin >> password;
+			if (DataValidation::validate_password(password)) break;
+			std::cerr << INVALID_PASSWORD << std::endl;
+		}
+		return password;
+	}
+	int get_height() {
+		int height;
+		std::cout << "Height (in cm): ";
+		while (!(std::cin >> height) || height <= 0) {
+			std::cerr << INVALID_HEIGHT;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+
+		return height;
+	}
+	double get_weight() {
+		double weight;
+
+		std::cout << "Weight (in kg): ";
+		while (!(std::cin >> weight) || weight <= 0) {
+			std::cerr << INVALID_WEIGHT;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+
+		return weight;
+	}
+
 	std::string get_birthday() {
 		int year, month, day;
 		while (true) {
@@ -125,7 +171,7 @@ namespace InputIntegratedValidation {
 
 			int rate_choice = get_validated_input("Rate: ", 1, MAX_RATE);
 			int rate = TRANSFORMATION_RATES[rate_choice - 1];
-			return (goal == 1) ? -rate : rate; 
+			return (goal == 1) ? -rate : rate;
 		}
 		return 0;
 	}
@@ -138,6 +184,22 @@ namespace InputIntegratedValidation {
 
 		return get_validated_input("AccountType: ", 1, 2);
 	}
+
+	int get_profile_info() {
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "1 - Username" << std::endl;
+		std::cout << "2 - Password" << std::endl;
+		std::cout << "3 - Height" << std::endl;
+		std::cout << "4 - Weight" << std::endl;
+		std::cout << "5 - Activity level" << std::endl;
+		std::cout << "6 - Goal" << std::endl;
+		std::cout << "7 - Transformation rate" << std::endl;
+		std::cout << "8 - Account type" << std::endl;
+		std::cout << "#Guide: Enter the number of the parameter you want to edit." << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
+
+		return get_validated_input("Option: ", 1, 8);
+	}
 }
 
 namespace DataOperations {
@@ -148,7 +210,7 @@ namespace DataOperations {
 
 		time_t t = time(0);
 		tm now;
-		localtime_s(&now, &t); 
+		localtime_s(&now, &t);
 		int age = now.tm_year + 1900 - year;
 		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day)) {
 			--age;
@@ -158,7 +220,7 @@ namespace DataOperations {
 	}
 
 	int calculate_bmr(int gender, double weight, int height, int age, int activity_level) {
-		
+
 		double weight_index = gender == 1 ? 13.397 : 9.247;
 		double height_index = gender == 1 ? 4.799 : 3.098;
 		double age_index = gender == 1 ? 5.677 : 4.330;
@@ -166,7 +228,7 @@ namespace DataOperations {
 		double bmr = gender == 1 ? 88.362 : 447.593;
 		bmr += weight_index * weight + height_index * height - age_index * age;
 		bmr *= ACTIVITY_LEVELS[activity_level];
-		
+
 		return (int)bmr;
 	}
 }
