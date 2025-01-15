@@ -7,7 +7,8 @@ namespace DataValidation {
 	bool username_exists(const std::string& username) {
 		for (const auto& stored_username : usernames)
 		{
-			if (stored_username == username) {
+			if (stored_username == username)
+			{
 				return true;
 			}
 		}
@@ -17,33 +18,40 @@ namespace DataValidation {
 	bool validate_username(std::string& username) {
 
 		load_usernames();
-		if (usernames.empty()) {
+		if (usernames.empty())
+		{
 			return true;
 		}
-		if (username.find('%') != std::string::npos) {
+		if (username.find('%') != std::string::npos)
+		{
 			return false;
 		}
-		if (username_exists(username)) {
+		if (username_exists(username))
+		{
 			return false;
 		}
 		return true;
 	}
 
 	bool validate_password(const std::string& password) {
-		if (password.find('%') != std::string::npos) {
+		if (password.find('%') != std::string::npos)
+		{
 			return false;
 		}
 		return true;
 	}
 
 	bool is_valid_date(int year, int month, int day) {
-		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31) {
+		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31)
+		{
 			return false;
 		}
-		if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) {
+		if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
+		{
 			return false;
 		}
-		if (month == 2) {
+		if (month == 2)
+		{
 			bool is_leap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
 			return day <= (is_leap ? 29 : 28);
 		}
@@ -55,7 +63,8 @@ namespace InputIntegratedValidation {
 	std::string get_username() {
 
 		std::string username;
-		while (true) {
+		while (true)
+		{
 			std::cout << "Username: ";
 			std::cin >> username;
 			if (DataValidation::validate_username(username)) break;
@@ -66,7 +75,8 @@ namespace InputIntegratedValidation {
 	std::string get_password() {
 
 		std::string password;
-		while (true) {
+		while (true)
+		{
 			std::cout << "Password: ";
 			std::cin >> password;
 			if (DataValidation::validate_password(password)) break;
@@ -77,7 +87,8 @@ namespace InputIntegratedValidation {
 	int get_height() {
 		int height;
 		std::cout << "Height (in cm): ";
-		while (!(std::cin >> height) || height <= 0) {
+		while (!(std::cin >> height) || height <= 0)
+		{
 			std::cerr << INVALID_HEIGHT;
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -89,7 +100,8 @@ namespace InputIntegratedValidation {
 		double weight;
 
 		std::cout << "Weight (in kg): ";
-		while (!(std::cin >> weight) || weight <= 0) {
+		while (!(std::cin >> weight) || weight <= 0)
+		{
 			std::cerr << INVALID_WEIGHT;
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
@@ -100,10 +112,12 @@ namespace InputIntegratedValidation {
 
 	std::string get_birthday() {
 		int year, month, day;
-		while (true) {
+		while (true)
+		{
 			std::cout << "Enter birthday (YYYY-MM-DD): ";
 			char delimiter;
-			if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && DataValidation::is_valid_date(year, month, day)) {
+			if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && DataValidation::is_valid_date(year, month, day))
+			{
 				return std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" +
 					(day < 10 ? "0" : "") + std::to_string(day);
 			}
@@ -114,15 +128,18 @@ namespace InputIntegratedValidation {
 	}
 	int get_validated_input(const std::string& prompt, int min, int max) {
 		int choice;
-		while (true) {
+		while (true)
+		{
 			std::cout << prompt;
 			std::cin >> choice;
-			if (std::cin.fail() || choice < min || choice > max) {
+			if (std::cin.fail() || choice < min || choice > max)
+			{
 				std::cerr << "Invalid input. Please enter a number between " << min << " and " << max << ".\n";
 				std::cin.clear();
 				std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			}
-			else {
+			else
+			{
 				return choice;
 			}
 		}
@@ -160,7 +177,8 @@ namespace InputIntegratedValidation {
 		return get_validated_input("Goal: ", 1, 3);
 	}
 	int get_rate(int goal) {
-		if (goal != 2) {
+		if (goal != 2)
+		{
 			std::cout << "-----------------------------------------------------------" << std::endl;
 			std::cout << "1 - 0.25 kg a week" << std::endl;
 			std::cout << "2 - 0.50 kg a week" << std::endl;
@@ -212,7 +230,8 @@ namespace DataOperations {
 		tm now;
 		localtime_s(&now, &t);
 		int age = now.tm_year + 1900 - year;
-		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day)) {
+		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day))
+		{
 			--age;
 		}
 

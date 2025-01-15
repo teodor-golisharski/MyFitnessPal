@@ -25,7 +25,8 @@ void save_user(const std::string& username, const std::string& password, const s
 	int activity_level, int goal, int rate, int account) {
 	std::ofstream file(USERS_FILE_NAME, std::ios::app);
 
-	if (!file.is_open()) {
+	if (!file.is_open())
+	{
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
@@ -63,7 +64,8 @@ void delete_account() {
 	std::vector<std::string> active_users;
 
 	std::ifstream input_file(USERS_FILE_NAME);
-	if (!input_file) {
+	if (!input_file)
+	{
 		std::cerr << "Error: Could not open file.\n";
 		return;
 	}
@@ -71,17 +73,20 @@ void delete_account() {
 	std::string line;
 	bool userFound = false;
 
-	while (std::getline(input_file, line)) {
+	while (std::getline(input_file, line))
+	{
 		size_t first_delim = line.find('%');
 		size_t second_delim = line.find('%', first_delim + 1);
 
 		std::string temp_username = line.substr(0, first_delim);
 		std::string temp_password = line.substr(first_delim + 1, second_delim - first_delim - 1);
 
-		if (temp_username == current_user && temp_password == current_password) {
+		if (temp_username == current_user && temp_password == current_password)
+		{
 			userFound = true;
 		}
-		else {
+		else
+		{
 			active_users.push_back(line);
 		}
 	}
@@ -89,7 +94,8 @@ void delete_account() {
 	input_file.close();
 	std::ofstream temp_file(USERS_FILE_NAME, std::ios::trunc);
 
-	for (const std::string& cur_user : active_users) {
+	for (const std::string& cur_user : active_users)
+	{
 		temp_file << cur_user << "\n";
 	}
 
@@ -100,46 +106,67 @@ void edit_profile() {
 	int option = InputIntegratedValidation::get_profile_info();
 
 	std::string parameter = PROFILE_INFORMATION[option - 1];
-	std::string new_line = "";
 
 	std::string target_user = current_user;
 	std::string target_password = current_password;
 
-	if (parameter == "username") {
+	bool bmr_changed = false;
+
+	if (parameter == "username")
+	{
 		target_user = InputIntegratedValidation::get_username();
 	}
-	else if (parameter == "password") {
+	else if (parameter == "password")
+	{
 		target_password = InputIntegratedValidation::get_password();
 	}
-	else if (parameter == "height") {
+	else if (parameter == "height")
+	{
 		current_height = InputIntegratedValidation::get_height();
+		bmr_changed = true;
 	}
-	else if (parameter == "weight") {
+	else if (parameter == "weight")
+	{
 		current_weight = InputIntegratedValidation::get_weight();
+		bmr_changed = true;
 	}
-	else if (parameter == "activity_level") {
+	else if (parameter == "activity_level")
+	{
 		current_activity_level = InputIntegratedValidation::get_activity_level();
+		bmr_changed = true;
 	}
-	else if (parameter == "goal") {
+	else if (parameter == "goal")
+	{
 		current_goal = InputIntegratedValidation::get_goal();
 		current_rate = InputIntegratedValidation::get_rate(current_goal);
+		bmr_changed = true;
 	}
-	else if (parameter == "rate") {
+	else if (parameter == "rate")
+	{
 		current_rate = InputIntegratedValidation::get_rate(current_goal);
+		bmr_changed = true;
 	}
-	else if (parameter == "account") {
+	else if (parameter == "account")
+	{
 		current_account = InputIntegratedValidation::get_account_type();
 	}
 
 	delete_account();
 	save_user(target_user, target_password, current_birthday, current_gender, current_height, current_weight, current_activity_level, current_goal, current_rate, current_account);
+	
+	if (bmr_changed)
+	{
+		bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
+	}
+
 	std::cout << PROFILE_SAVE_CHANGES << std::endl;
 }
 
 void log_in(std::string username, std::string password) {
 	std::ifstream file(USERS_FILE_NAME);
 
-	if (!file.is_open()) {
+	if (!file.is_open())
+	{
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
@@ -147,21 +174,25 @@ void log_in(std::string username, std::string password) {
 	std::string line;
 	bool found = false;
 
-	while (std::getline(file, line)) {
+	while (std::getline(file, line))
+	{
 		size_t pos_username = line.find('%');
-		if (pos_username == std::string::npos) {
+		if (pos_username == std::string::npos)
+		{
 			continue;
 		}
 
 		std::string file_username = line.substr(0, pos_username);
 
 		size_t pos_password = line.find('%', pos_username + 1);
-		if (pos_password == std::string::npos) {
+		if (pos_password == std::string::npos)
+		{
 			continue;
 		}
 		std::string file_password = line.substr(pos_username + 1, pos_password - pos_username - 1);
 
-		if (file_username == username && file_password == password) {
+		if (file_username == username && file_password == password)
+		{
 			found = true;
 
 			current_user = username;
@@ -200,26 +231,18 @@ void log_in(std::string username, std::string password) {
 			current_account = std::stoi(line.substr(start));
 
 			bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
-			std::cout << current_user << std::endl;
-			std::cout << current_password << std::endl;
-			std::cout << current_age << std::endl;
-			std::cout << current_height << std::endl;
-			std::cout << current_weight << std::endl;
-			std::cout << current_activity_level << std::endl;
-			std::cout << current_goal << std::endl;
-			std::cout << current_rate << std::endl;
-			std::cout << current_account << std::endl;
-			std::cout << bmr << std::endl;
 			break;
 		}
 	}
 
 	file.close();
 
-	if (found) {
+	if (found)
+	{
 		std::cout << LOGIN_SUCCESSFUL << username << "!" << std::endl;
 	}
-	else {
+	else
+	{
 		std::cerr << INVALID_USERNAME_OR_PASSWORD << std::endl;
 	}
 }
@@ -261,7 +284,8 @@ void delay(int milliseconds) {
 void simulate_loading_bar() {
 	const int bar_width = 42;
 	std::cout << "Loading: [";
-	for (int i = 0; i < bar_width; ++i) {
+	for (int i = 0; i < bar_width; ++i)
+	{
 		std::cout << "#";
 		std::cout.flush();
 		delay(25);
@@ -275,24 +299,26 @@ void help_guide() {
 	std::cout << "------------------------ HELP MENU ------------------------" << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "\nAvailable Commands:" << std::endl;
-	if (current_user.empty()) {
-		std::cout << " + help     |  Display this help guide." << std::endl;
+	std::cout << " + exit     |  Exit the application." << std::endl;
+	std::cout << " + help     |  Display this help guide." << std::endl;
+	if (current_user.empty())
+	{
 		std::cout << " + signup   |  Create a new account to start tracking" << std::endl;
 		std::cout << "            |  your fitness journey." << std::endl;
 		std::cout << " + login    |  Log in to your existing account to access" << std::endl;
 		std::cout << "            |  personalized features." << std::endl;
-		std::cout << " + exit     |  Exit the application." << std::endl;
 		std::cout << "\n-----------------------------------------------------------" << std::endl;
 		std::cout << "Note: You need to log in or sign up to use more features." << std::endl;
 		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
 	}
-	else {
-		std::cout << " + help     |  Display this help guide." << std::endl;
-		std::cout << " + signup   |  Create a new account to start tracking." << std::endl;
-		std::cout << "            |  your fitness journey." << std::endl;
-		std::cout << " + login    |  Log in to your existing account to access." << std::endl;
-		std::cout << "            |  personalized features." << std::endl;
-		std::cout << " + exit     |  Exit the application." << std::endl;
+	else
+	{
+		std::cout << " + log_out           |  Log out of your profile." << std::endl;
+		std::cout << " + edit_profile      |  Edit profile information." << std::endl;
+		std::cout << " + delete_account    |  Permanently delete your account and" << std::endl;
+		std::cout << "                     |  all stored information." << std::endl;
+		std::cout << " + add_nutrition     |  Add nutrition to your daily log." << std::endl;
+		// more functionality here 
 		std::cout << "\n-----------------------------------------------------------" << std::endl;
 		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
 	}
@@ -315,23 +341,29 @@ void command_line() {
 	std::cin >> input;
 	while (true)
 	{
-		if (input == "exit") {
+		if (input == "exit")
+		{
 			std::cout << "Exiting";
-			for (int i = 0; i < 3; ++i) {
+			for (int i = 0; i < 3; ++i)
+			{
 				std::cout << ".";
 				std::cout.flush();
 				delay(25);
 			}
 			return;
 		}
-		else if (input == "help") {
+		else if (input == "help")
+		{
 			help_guide();
 		}
-		else if (current_user.empty()) {
-			if (input == "signup") {
+		else if (current_user.empty())
+		{
+			if (input == "signup")
+			{
 				create_account();
 			}
-			else if (input == "login") {
+			else if (input == "login")
+			{
 				std::string username_input, password_input;
 				std::cout << "Username: ";
 				std::cin >> username_input;
@@ -340,30 +372,42 @@ void command_line() {
 
 				log_in(username_input, password_input);
 			}
-			else {
+			else
+			{
 				std::cerr << INVALID_COMMAND << std::endl;
 			}
 		}
-		else if (!current_user.empty()) {
-			if (input == "log_out") {
+		else if (!current_user.empty())
+		{
+			if (input == "log_out")
+			{
 				log_out();
 			}
-			else if (input == "delete_account") {
+			else if (input == "delete_account")
+			{
 				delete_account();
 				std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
 			}
-			else if (input == "edit_profile") {
+			else if (input == "edit_profile")
+			{
 				edit_profile();
 			}
-			else if (input == "add_nutrition") {
+			else if (input == "add_nutrition")
+			{
 
 			}
-			else if (input == "add_exercise") {
+			else if (input == "add_exercise")
+			{
 
+			}
+			else
+			{
+				std::cerr << INVALID_COMMAND << std::endl;
 			}
 
 		}
-		else {
+		else
+		{
 			std::cerr << INVALID_COMMAND << std::endl;
 		}
 
