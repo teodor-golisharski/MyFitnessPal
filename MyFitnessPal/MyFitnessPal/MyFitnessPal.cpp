@@ -94,7 +94,6 @@ void delete_account() {
 	}
 
 	temp_file.close();
-	std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
 }
 
 void edit_profile() {
@@ -123,6 +122,7 @@ void edit_profile() {
 	}
 	else if (parameter == "goal") {
 		current_goal = InputIntegratedValidation::get_goal();
+		current_rate = InputIntegratedValidation::get_rate(current_goal);
 	}
 	else if (parameter == "rate") {
 		current_rate = InputIntegratedValidation::get_rate(current_goal);
@@ -227,6 +227,8 @@ void log_in(std::string username, std::string password) {
 void log_out() {
 	current_user = "";
 	current_password = "";
+	current_birthday = "";
+
 	current_gender = 0;
 	current_age = 0;
 	current_height = 0;
@@ -235,8 +237,9 @@ void log_out() {
 	current_goal = 0;
 	current_rate = 0;
 	current_account = 0;
-
 	bmr = 0;
+
+	std::cout << LOGOUT_SUCCESSFUL << std::endl;
 }
 
 
@@ -347,6 +350,7 @@ void command_line() {
 			}
 			else if (input == "delete_account") {
 				delete_account();
+				std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
 			}
 			else if (input == "edit_profile") {
 				edit_profile();
@@ -370,7 +374,8 @@ void command_line() {
 }
 
 void run() {
-	start_guide();
+	//start_guide();
+	help_guide(); // temp
 	command_line();
 }
 
