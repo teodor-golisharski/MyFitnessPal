@@ -264,7 +264,8 @@ namespace InputIntegratedValidation
 		while (true)
 		{
 			std::cout << type << " name: ";
-			std::cin >> log_name;
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+			std::getline(std::cin, log_name);
 			if (DataValidation::validate_string(log_name)) break;
 			if (type == NUTRITION_TYPE)
 			{

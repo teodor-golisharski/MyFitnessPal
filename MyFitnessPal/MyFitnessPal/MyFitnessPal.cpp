@@ -12,7 +12,7 @@ std::string current_birthday = "";
 int current_gender = 0;
 int current_age = 0;
 int current_height = 0;
-int current_weight = 0;
+double current_weight = 0;
 int current_activity_level = 0;
 int current_goal = 0;
 int current_rate = 0;
@@ -59,7 +59,7 @@ void create_account()
 	std::cout << "---------------------- REGISTRATION -----------------------" << std::endl;
 
 	std::string username, password, birthdate;
-	int age, height, gender, activity_level, goal = 0, rate = 0, account;
+	int height, gender, activity_level, goal = 0, rate = 0, account;
 	double weight;
 
 	username = InputIntegratedValidation::get_username();
@@ -133,13 +133,25 @@ void view_profile()
 	std::cout << "Password: " << current_password << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "Birthdate: " << current_birthday << std::endl;
-	std::cout << "Gender: " << current_gender << std::endl;
+	std::cout << "Gender: " << GENDERS[current_gender - 1] << std::endl;
 	std::cout << "Height: " << current_height << std::endl;
 	std::cout << "Weight: " << current_weight << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "Activity level: " << ACTIVITY_LEVELS_STRING[current_activity_level - 1] << std::endl;
 	std::cout << "Goal: " << GOALS_STRING[current_goal - 1] << std::endl;
-	// std::cout << "Rate: " <<  << std::endl;
+	if (current_goal != 2)
+	{
+		int index = 0;
+		for (int i = 0; i < MAX_RATE; ++i)
+		{
+			if (current_rate == TRANSFORMATION_RATES[i])
+			{
+				index = i;
+				break;
+			}
+		}
+		std::cout << "Rate: " << RATES_STRING[index] << std::endl;
+	}
 	std::cout << "Account: " << ACCOUNTS_STRING[current_account - 1] << std::endl;
 }
 
@@ -153,6 +165,7 @@ void edit_profile()
 	std::string target_password = current_password;
 
 	bool bmr_changed = false;
+	bool changes_made = true;
 
 	if (parameter == "username")
 	{
@@ -185,23 +198,38 @@ void edit_profile()
 	}
 	else if (parameter == "rate")
 	{
-		current_rate = InputIntegratedValidation::get_rate(current_goal);
-		bmr_changed = true;
+		if (current_goal != 2)
+		{
+			current_rate = InputIntegratedValidation::get_rate(current_goal);
+			bmr_changed = true;
+		}
+		else
+		{
+			std::cerr << RATE_CHANGE_UNAVAILABLE << std::endl;
+			changes_made = false;
+		}
+
 	}
 	else if (parameter == "account")
 	{
 		current_account = InputIntegratedValidation::get_account_type();
 	}
 
-	delete_account();
-	save_user(target_user, target_password, current_birthday, current_gender, current_height, current_weight, current_activity_level, current_goal, current_rate, current_account);
-
-	if (bmr_changed)
+	if (changes_made)
 	{
-		bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
-	}
+		delete_account();
+		save_user(target_user, target_password, current_birthday, current_gender, current_height, current_weight, current_activity_level, current_goal, current_rate, current_account);
 
-	std::cout << PROFILE_SAVE_CHANGES << std::endl;
+		if (bmr_changed)
+		{
+			bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
+		}
+		std::cout << PROFILE_SAVE_CHANGES << std::endl;
+	}
+	else
+	{
+		std::cerr << NO_CHANGES << std::endl;
+	}
 }
 void log_in(const std::string& username, const std::string& password)
 {
@@ -398,12 +426,15 @@ void help_guide()
 		std::cout << " + delete_account    |  Permanently delete your account and" << std::endl;
 		std::cout << "                     |  all stored information." << std::endl;
 		std::cout << " + add_nutrition     |  Add nutrition to your daily log." << std::endl;
-		// more functionality here 
+		std::cout << " + add_exercise      |  Add exercise to your daily log." << std::endl;
+		std::cout << " + daily_logs        |  View your daily logs." << std::endl;
+		std::cout << " + view_logs         |  View your logs for a specific date." << std::endl;
+		std::cout << " + edit_log          |  Edit one of your daily logs." << std::endl;
+		std::cout << " + delete_logs       |  Erase all logs from a chosen date." << std::endl;
 		std::cout << "\n-----------------------------------------------------------" << std::endl;
 		std::cout << "For questions, contact support at support@myfitnespal.com." << std::endl;
 	}
 	std::cout << "-----------------------------------------------------------" << std::endl;;
-	std::cout << "" << std::endl;
 }
 void start_guide()
 {
@@ -418,7 +449,7 @@ void start_guide()
 
 void command_line()
 {
-	std::cout << "Command: ";
+	std::cout << "\nCommand: ";
 	std::string input;
 	std::cin >> input;
 	while (true)
@@ -474,7 +505,8 @@ void command_line()
 			{
 				edit_profile();
 			}
-			else if (input == "view_profile"){
+			else if (input == "view_profile")
+			{
 				view_profile();
 			}
 			else if (input == "add_nutrition")
@@ -484,6 +516,22 @@ void command_line()
 			else if (input == "add_exercise")
 			{
 				add_log(EXERCISE_TYPE);
+			}
+			else if (input == "daily_logs")
+			{
+
+			}
+			else if (input == "view_logs")
+			{
+
+			}
+			else if (input == "edit_log")
+			{
+
+			}
+			else if (input == "delete_logs")
+			{
+
 			}
 			else
 			{
@@ -495,7 +543,7 @@ void command_line()
 			std::cerr << INVALID_COMMAND << std::endl;
 		}
 
-		std::cout << "Command: ";
+		std::cout << "\nCommand: ";
 		std::cin >> input;
 	}
 

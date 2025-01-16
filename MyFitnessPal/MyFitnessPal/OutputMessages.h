@@ -11,6 +11,7 @@ const std::string INVALID_ACTIVITY_LEVEL = "Invalid activity level. Please enter
 const std::string INVALID_GENDER = "Invalid gender. Please enter a correct one.";
 const std::string INVALID_WEIGHT = "Invalid weight. Please enter a valid positive number: ";
 const std::string INVALID_HEIGHT = "Invalid height. Please enter a valid positive number: ";
+const std::string RATE_CHANGE_UNAVAILABLE = "Rate change is unavailable. Please update your goal first.";
 
 const std::string INVALID_FOOD_NAME = "Food name cannot contain '%'. Try again.";
 const std::string INVALID_EXERCISE_NAME = "Exercise name cannot contain '%'. Try again.";
@@ -21,6 +22,8 @@ const std::string FILE_NOT_FOUND = "Error! File was not found.";
 const std::string INVALID_COMMAND = "Command not recognized! Type help for additional guidance.";
 const std::string LOCALTIME_ERROR = "Error retrieving local time.";
 const std::string SOMETHING_WENT_WRONG = "Something went wrong. Try again or contact support.";
+const std::string NO_CHANGES = "No changes were made due to an error.";
+
 
 // Success messages
 const std::string ACCOUNT_CREATED_SUCCESSFULLY = "Account created successfully! Welcome to MyFitnessPal, ";
