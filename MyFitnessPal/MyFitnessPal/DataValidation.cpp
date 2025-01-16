@@ -1,10 +1,12 @@
 #include <string>
+#include <ctime>
 #include "ApplicationConstants.h"
 #include "DataLoader.h"
 
-namespace DataValidation {
-
-	bool username_exists(const std::string& username) {
+namespace DataValidation
+{
+	bool username_exists(const std::string& username)
+	{
 		for (const auto& stored_username : usernames)
 		{
 			if (stored_username == username)
@@ -15,14 +17,24 @@ namespace DataValidation {
 		return false;
 	}
 
-	bool validate_username(std::string& username) {
+	bool validate_string(const std::string& input)
+	{
+		if (input.find('%') != std::string::npos)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	bool validate_username(const std::string& username)
+	{
 
 		load_usernames();
 		if (usernames.empty())
 		{
 			return true;
 		}
-		if (username.find('%') != std::string::npos)
+		if (validate_string(username))
 		{
 			return false;
 		}
@@ -33,15 +45,8 @@ namespace DataValidation {
 		return true;
 	}
 
-	bool validate_password(const std::string& password) {
-		if (password.find('%') != std::string::npos)
-		{
-			return false;
-		}
-		return true;
-	}
-
-	bool is_valid_date(int year, int month, int day) {
+	bool is_valid_date(int year, int month, int day)
+	{
 		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31)
 		{
 			return false;
@@ -59,9 +64,10 @@ namespace DataValidation {
 	}
 }
 
-namespace InputIntegratedValidation {
-	std::string get_username() {
-
+namespace InputIntegratedValidation
+{
+	std::string get_username()
+	{
 		std::string username;
 		while (true)
 		{
@@ -72,19 +78,21 @@ namespace InputIntegratedValidation {
 		}
 		return username;
 	}
-	std::string get_password() {
+	std::string get_password()
+	{
 
 		std::string password;
 		while (true)
 		{
 			std::cout << "Password: ";
 			std::cin >> password;
-			if (DataValidation::validate_password(password)) break;
+			if (DataValidation::validate_string(password)) break;
 			std::cerr << INVALID_PASSWORD << std::endl;
 		}
 		return password;
 	}
-	int get_height() {
+	int get_height()
+	{
 		int height;
 		std::cout << "Height (in cm): ";
 		while (!(std::cin >> height) || height <= 0)
@@ -96,7 +104,8 @@ namespace InputIntegratedValidation {
 
 		return height;
 	}
-	double get_weight() {
+	double get_weight()
+	{
 		double weight;
 
 		std::cout << "Weight (in kg): ";
@@ -110,7 +119,30 @@ namespace InputIntegratedValidation {
 		return weight;
 	}
 
-	std::string get_birthday() {
+	std::string get_local_time()
+	{
+		std::time_t now = std::time(nullptr);
+		std::tm localTime = {};
+
+		if (localtime_s(&localTime, &now) != 0)
+		{
+			return LOCALTIME_ERROR;
+		}
+
+		int year = localTime.tm_year + 1900;
+		int month = localTime.tm_mon + 1;
+		int day = localTime.tm_mday;
+
+		std::string yearStr = std::to_string(year);
+		std::string monthStr = (month < 10 ? "0" : "") + std::to_string(month);
+		std::string dayStr = (day < 10 ? "0" : "") + std::to_string(day);
+
+		std::string date_now = yearStr + "-" + monthStr + "-" + dayStr;
+		return date_now;
+	}
+
+	std::string get_birthday()
+	{
 		int year, month, day;
 		while (true)
 		{
@@ -126,7 +158,8 @@ namespace InputIntegratedValidation {
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
 	}
-	int get_validated_input(const std::string& prompt, int min, int max) {
+	int get_validated_input(const std::string& prompt, int min, int max)
+	{
 		int choice;
 		while (true)
 		{
@@ -144,7 +177,8 @@ namespace InputIntegratedValidation {
 			}
 		}
 	}
-	int get_gender() {
+	int get_gender()
+	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Male" << std::endl;
 		std::cout << "2 - Female" << std::endl;
@@ -154,36 +188,39 @@ namespace InputIntegratedValidation {
 		return get_validated_input("Gender: ", 1, 2);
 	}
 
-	int get_activity_level() {
+	int get_activity_level()
+	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
-		std::cout << "1 - Sedentary (little to no exercise)" << std::endl;
-		std::cout << "2 - Light activity (exercise 1-3 days per week)" << std::endl;
-		std::cout << "3 - Moderate activity (exercise 3-5 days per week)" << std::endl;
-		std::cout << "4 - Active (exercise 6-7 days per week)" << std::endl;
-		std::cout << "5 - Very active (intense workouts or physical labor)" << std::endl;
+		std::cout << "1 - " << ACTIVITY_LEVELS_STRING[0] << std::endl;
+		std::cout << "2 - " << ACTIVITY_LEVELS_STRING[1] << std::endl;
+		std::cout << "3 - " << ACTIVITY_LEVELS_STRING[2] << std::endl;
+		std::cout << "4 - " << ACTIVITY_LEVELS_STRING[3] << std::endl;
+		std::cout << "5 - " << ACTIVITY_LEVELS_STRING[4] << std::endl;
 		std::cout << "#Guide: Type the number corresponding to your activity." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("Activity level: ", 1, MAX_ACTIVITY_LEVEL);
 	}
-	int get_goal() {
+	int get_goal()
+	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
-		std::cout << "1 - Lose weight" << std::endl;
-		std::cout << "2 - Maintain weight" << std::endl;
-		std::cout << "3 - Gain weight" << std::endl;
+		std::cout << "1 - "<< GOALS_STRING[0] << std::endl;
+		std::cout << "2 - "<< GOALS_STRING[1] << std::endl;
+		std::cout << "3 - "<< GOALS_STRING[2] << std::endl;
 		std::cout << "#Guide: Type the number corresponding to your goal." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("Goal: ", 1, 3);
 	}
-	int get_rate(int goal) {
+	int get_rate(int goal)
+	{
 		if (goal != 2)
 		{
 			std::cout << "-----------------------------------------------------------" << std::endl;
-			std::cout << "1 - 0.25 kg a week" << std::endl;
-			std::cout << "2 - 0.50 kg a week" << std::endl;
-			std::cout << "3 - 0.75 kg a week" << std::endl;
-			std::cout << "4 - 1 kg a week" << std::endl;
+			std::cout << "1 - " << RATES_STRING[0] << std::endl;
+			std::cout << "2 - " << RATES_STRING[1] << std::endl;
+			std::cout << "3 - " << RATES_STRING[2] << std::endl;
+			std::cout << "4 - " << RATES_STRING[3] << std::endl;
 			std::cout << "#Guide: Type the number corresponding to your desired \ntransformation rate." << std::endl;
 			std::cout << "-----------------------------------------------------------" << std::endl;
 
@@ -193,17 +230,19 @@ namespace InputIntegratedValidation {
 		}
 		return 0;
 	}
-	int get_account_type() {
+	int get_account_type()
+	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "------------------- CHOOSE ACCOUNT TYPE -------------------" << std::endl;
-		std::cout << "1 - Standard" << std::endl;
-		std::cout << "2 - Premium" << std::endl;
+		std::cout << "1 - " << ACCOUNTS_STRING[0] << std::endl;
+		std::cout << "2 - " << ACCOUNTS_STRING[1] << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("AccountType: ", 1, 2);
 	}
 
-	int get_profile_info() {
+	int get_profile_info()
+	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << "1 - Username" << std::endl;
 		std::cout << "2 - Password" << std::endl;
@@ -218,11 +257,45 @@ namespace InputIntegratedValidation {
 
 		return get_validated_input("Option: ", 1, 8);
 	}
+
+	std::string get_log_name(const std::string& type)
+	{
+		std::string log_name;
+		while (true)
+		{
+			std::cout << type << " name: ";
+			std::cin >> log_name;
+			if (DataValidation::validate_string(log_name)) break;
+			if (type == NUTRITION_TYPE)
+			{
+				std::cerr << INVALID_FOOD_NAME << std::endl;
+			}
+			else
+			{
+				std::cerr << INVALID_EXERCISE_NAME << std::endl;
+			}
+		}
+		return log_name;
+	}
+	int get_calories()
+	{
+		int calories;
+		std::cout << "Calories: ";
+		while (!(std::cin >> calories) || calories <= 0)
+		{
+			std::cerr << INVALID_CALORIES;
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+
+		return calories;
+	}
 }
 
-namespace DataOperations {
-
-	int calculate_age(const std::string& birthdate) {
+namespace DataOperations
+{
+	int calculate_age(const std::string& birthdate)
+	{
 		int year, month, day;
 		sscanf_s(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
 
@@ -238,7 +311,8 @@ namespace DataOperations {
 		return age;
 	}
 
-	int calculate_bmr(int gender, double weight, int height, int age, int activity_level) {
+	int calculate_bmr(int gender, double weight, int height, int age, int activity_level)
+	{
 
 		double weight_index = gender == 1 ? 13.397 : 9.247;
 		double height_index = gender == 1 ? 4.799 : 3.098;

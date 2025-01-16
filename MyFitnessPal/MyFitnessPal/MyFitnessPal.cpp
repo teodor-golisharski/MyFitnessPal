@@ -20,23 +20,42 @@ int current_account = 0;
 
 int bmr = 0;
 
-void save_user(const std::string& username, const std::string& password, const std::string& birthdate,
+bool save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	int gender, int height, double weight,
-	int activity_level, int goal, int rate, int account) {
+	int activity_level, int goal, int rate, int account)
+{
 	std::ofstream file(USERS_FILE_NAME, std::ios::app);
 
 	if (!file.is_open())
 	{
 		std::cerr << FILE_NOT_FOUND << std::endl;
-		return;
+		return false;
 	}
 	file << username << "%" << password << "%" << birthdate << "%"
 		<< gender << "%" << height << "%" << weight << "%"
 		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
 	file.close();
+
+	return true;
 }
 
-void create_account() {
+bool save_log(const std::string& username, const std::string& date, const std::string& name, int calories)
+{
+	std::ofstream file(LOGS_FILE_NAME, std::ios::app);
+
+	if (!file.is_open())
+	{
+		std::cerr << FILE_NOT_FOUND << std::endl;
+		return false;
+	}
+	file << username << "%" << date << "%" << name << "%" << calories << "\n";
+	file.close();
+
+	return true;
+}
+
+void create_account()
+{
 	std::cout << "---------------------- REGISTRATION -----------------------" << std::endl;
 
 	std::string username, password, birthdate;
@@ -56,11 +75,17 @@ void create_account() {
 	rate = InputIntegratedValidation::get_rate(goal);
 	account = InputIntegratedValidation::get_account_type();
 
-	save_user(username, password, birthdate, gender, height, weight, activity_level, goal, rate, account);
-	std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
+	if (save_user(username, password, birthdate, gender, height, weight, activity_level, goal, rate, account))
+	{
+		std::cout << ACCOUNT_CREATED_SUCCESSFULLY << username << "!" << std::endl;
+	}
+	else
+	{
+		std::cerr << SOMETHING_WENT_WRONG << std::endl;
+	}
 }
-
-void delete_account() {
+void delete_account()
+{
 	std::vector<std::string> active_users;
 
 	std::ifstream input_file(USERS_FILE_NAME);
@@ -101,8 +126,25 @@ void delete_account() {
 
 	temp_file.close();
 }
+void view_profile()
+{
+	std::cout << "--------------------- ACCOUNT DETAILS ---------------------" << std::endl;
+	std::cout << "Username: " << current_user << std::endl;
+	std::cout << "Password: " << current_password << std::endl;
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "Birthdate: " << current_birthday << std::endl;
+	std::cout << "Gender: " << current_gender << std::endl;
+	std::cout << "Height: " << current_height << std::endl;
+	std::cout << "Weight: " << current_weight << std::endl;
+	std::cout << "-----------------------------------------------------------" << std::endl;
+	std::cout << "Activity level: " << ACTIVITY_LEVELS_STRING[current_activity_level - 1] << std::endl;
+	std::cout << "Goal: " << GOALS_STRING[current_goal - 1] << std::endl;
+	// std::cout << "Rate: " <<  << std::endl;
+	std::cout << "Account: " << ACCOUNTS_STRING[current_account - 1] << std::endl;
+}
 
-void edit_profile() {
+void edit_profile()
+{
 	int option = InputIntegratedValidation::get_profile_info();
 
 	std::string parameter = PROFILE_INFORMATION[option - 1];
@@ -153,7 +195,7 @@ void edit_profile() {
 
 	delete_account();
 	save_user(target_user, target_password, current_birthday, current_gender, current_height, current_weight, current_activity_level, current_goal, current_rate, current_account);
-	
+
 	if (bmr_changed)
 	{
 		bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
@@ -161,8 +203,8 @@ void edit_profile() {
 
 	std::cout << PROFILE_SAVE_CHANGES << std::endl;
 }
-
-void log_in(std::string username, std::string password) {
+void log_in(const std::string& username, const std::string& password)
+{
 	std::ifstream file(USERS_FILE_NAME);
 
 	if (!file.is_open())
@@ -246,8 +288,8 @@ void log_in(std::string username, std::string password) {
 		std::cerr << INVALID_USERNAME_OR_PASSWORD << std::endl;
 	}
 }
-
-void log_out() {
+void log_out()
+{
 	current_user = "";
 	current_password = "";
 	current_birthday = "";
@@ -265,8 +307,41 @@ void log_out() {
 	std::cout << LOGOUT_SUCCESSFUL << std::endl;
 }
 
+void add_log(const std::string& type)
+{
+	std::string input;
+	int calories;
 
-void print_logo() {
+	if (type == NUTRITION_TYPE)
+	{
+		std::cout << "---------------------- Add Nutrition ----------------------" << std::endl;
+	}
+	else if (type == EXERCISE_TYPE)
+	{
+		std::cout << "----------------------- Add Exercise ----------------------" << std::endl;
+	}
+
+	input = InputIntegratedValidation::get_log_name(type);
+	calories = InputIntegratedValidation::get_calories();
+	if (type == EXERCISE_TYPE)
+	{
+		calories *= -1;
+	}
+
+	std::string date_now = InputIntegratedValidation::get_local_time();
+
+	if (save_log(current_user, date_now, input, calories))
+	{
+		std::cout << LOG_SAVED << std::endl;
+	}
+	else
+	{
+		std::cout << SOMETHING_WENT_WRONG << std::endl;
+	}
+}
+
+void print_logo()
+{
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << " __  __       _____ _ _                       ____       _ " << std::endl;
 	std::cout << "|  \\/  |_   _|  ___(_) |_ _ __   ___  ___ ___|  _ \\ __ _| |" << std::endl;
@@ -277,11 +352,13 @@ void print_logo() {
 	std::cout << "-----------------------------------------------------------" << std::endl;
 
 }
-void delay(int milliseconds) {
+void delay(int milliseconds)
+{
 	clock_t start_time = clock();
 	while (clock() < start_time + milliseconds * CLOCKS_PER_SEC / 1000);
 }
-void simulate_loading_bar() {
+void simulate_loading_bar()
+{
 	const int bar_width = 42;
 	std::cout << "Loading: [";
 	for (int i = 0; i < bar_width; ++i)
@@ -293,7 +370,8 @@ void simulate_loading_bar() {
 	delay(250);
 	std::cout << "] Done!" << std::endl;
 }
-void help_guide() {
+void help_guide()
+{
 
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "------------------------ HELP MENU ------------------------" << std::endl;
@@ -313,8 +391,10 @@ void help_guide() {
 	}
 	else
 	{
+		std::cout << "-----------------------------------------------------------" << std::endl;
 		std::cout << " + log_out           |  Log out of your profile." << std::endl;
 		std::cout << " + edit_profile      |  Edit profile information." << std::endl;
+		std::cout << " + view_profile      |  View profile information." << std::endl;
 		std::cout << " + delete_account    |  Permanently delete your account and" << std::endl;
 		std::cout << "                     |  all stored information." << std::endl;
 		std::cout << " + add_nutrition     |  Add nutrition to your daily log." << std::endl;
@@ -325,7 +405,8 @@ void help_guide() {
 	std::cout << "-----------------------------------------------------------" << std::endl;;
 	std::cout << "" << std::endl;
 }
-void start_guide() {
+void start_guide()
+{
 	print_logo();
 
 	simulate_loading_bar();
@@ -335,7 +416,8 @@ void start_guide() {
 	help_guide();
 }
 
-void command_line() {
+void command_line()
+{
 	std::cout << "Command: ";
 	std::string input;
 	std::cin >> input;
@@ -392,19 +474,21 @@ void command_line() {
 			{
 				edit_profile();
 			}
+			else if (input == "view_profile"){
+				view_profile();
+			}
 			else if (input == "add_nutrition")
 			{
-
+				add_log(NUTRITION_TYPE);
 			}
 			else if (input == "add_exercise")
 			{
-
+				add_log(EXERCISE_TYPE);
 			}
 			else
 			{
 				std::cerr << INVALID_COMMAND << std::endl;
 			}
-
 		}
 		else
 		{
@@ -417,7 +501,8 @@ void command_line() {
 
 }
 
-void run() {
+void run()
+{
 	//start_guide();
 	help_guide(); // temp
 	command_line();
