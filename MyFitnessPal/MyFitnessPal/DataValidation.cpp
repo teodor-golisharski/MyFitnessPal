@@ -46,11 +46,29 @@ namespace DataValidation
 	}
 
 	bool is_valid_date(int year, int month, int day)
-	{
-		if (year < 1900 || year > 2024 || month < 1 || month > 12 || day < 1 || day > 31)
+	{		
+		if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31)
 		{
 			return false;
 		}
+
+		std::time_t now = std::time(nullptr);
+		std::tm localTime = {};
+		if (localtime_s(&localTime, &now) != 0)
+		{
+			return false; 
+		}
+
+		int local_year = localTime.tm_year + 1900;
+		int local_month = localTime.tm_mon + 1;
+		int local_day = localTime.tm_mday;
+
+		if (year > local_year || (year == local_year && month > local_month) ||
+			(year == local_year && month == local_month && day > local_day))
+		{
+			return false;
+		}
+
 		if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
 		{
 			return false;
@@ -61,6 +79,39 @@ namespace DataValidation
 			return day <= (is_leap ? 29 : 28);
 		}
 		return true;
+	}
+}
+namespace DataOperations
+{
+	int calculate_age(const std::string& birthdate)
+	{
+		int year, month, day;
+		sscanf_s(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
+
+		time_t t = time(0);
+		tm now;
+		localtime_s(&now, &t);
+		int age = now.tm_year + 1900 - year;
+		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day))
+		{
+			--age;
+		}
+
+		return age;
+	}
+
+	int calculate_bmr(int gender, double weight, int height, int age, int activity_level)
+	{
+
+		double weight_index = gender == 1 ? 13.397 : 9.247;
+		double height_index = gender == 1 ? 4.799 : 3.098;
+		double age_index = gender == 1 ? 5.677 : 4.330;
+
+		double bmr = gender == 1 ? 88.362 : 447.593;
+		bmr += weight_index * weight + height_index * height - age_index * age;
+		bmr *= ACTIVITY_LEVELS[activity_level];
+
+		return (int)bmr;
 	}
 }
 
@@ -150,10 +201,33 @@ namespace InputIntegratedValidation
 			char delimiter;
 			if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && DataValidation::is_valid_date(year, month, day))
 			{
-				return std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" +
-					(day < 10 ? "0" : "") + std::to_string(day);
+				std::string date = std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" + (day < 10 ? "0" : "") + std::to_string(day);
+				if (DataOperations::calculate_age(date) >= 14)
+				{
+					return date;
+				}
+				std::cerr << INVALID_AGE << std::endl;
 			}
-			std::cout << INVALID_BIRTHDATE << std::endl;
+			else
+			{
+				std::cerr << INVALID_BIRTHDATE << std::endl;
+			}
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+	}
+	std::string get_log_date()
+	{
+		int year, month, day;
+		while (true)
+		{
+			std::cout << "Enter log date (YYYY-MM-DD): ";
+			char delimiter;
+			if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && DataValidation::is_valid_date(year, month, day))
+			{
+				return std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" + (day < 10 ? "0" : "") + std::to_string(day);
+			}
+			std::cerr << INVALID_LOG_DATE << std::endl;
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 		}
@@ -204,9 +278,9 @@ namespace InputIntegratedValidation
 	int get_goal()
 	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
-		std::cout << "1 - "<< GOALS_STRING[0] << std::endl;
-		std::cout << "2 - "<< GOALS_STRING[1] << std::endl;
-		std::cout << "3 - "<< GOALS_STRING[2] << std::endl;
+		std::cout << "1 - " << GOALS_STRING[0] << std::endl;
+		std::cout << "2 - " << GOALS_STRING[1] << std::endl;
+		std::cout << "3 - " << GOALS_STRING[2] << std::endl;
 		std::cout << "#Guide: Type the number corresponding to your goal." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
@@ -293,38 +367,5 @@ namespace InputIntegratedValidation
 	}
 }
 
-namespace DataOperations
-{
-	int calculate_age(const std::string& birthdate)
-	{
-		int year, month, day;
-		sscanf_s(birthdate.c_str(), "%d-%d-%d", &year, &month, &day);
-
-		time_t t = time(0);
-		tm now;
-		localtime_s(&now, &t);
-		int age = now.tm_year + 1900 - year;
-		if (now.tm_mon + 1 < month || (now.tm_mon + 1 == month && now.tm_mday < day))
-		{
-			--age;
-		}
-
-		return age;
-	}
-
-	int calculate_bmr(int gender, double weight, int height, int age, int activity_level)
-	{
-
-		double weight_index = gender == 1 ? 13.397 : 9.247;
-		double height_index = gender == 1 ? 4.799 : 3.098;
-		double age_index = gender == 1 ? 5.677 : 4.330;
-
-		double bmr = gender == 1 ? 88.362 : 447.593;
-		bmr += weight_index * weight + height_index * height - age_index * age;
-		bmr *= ACTIVITY_LEVELS[activity_level];
-
-		return (int)bmr;
-	}
-}
 
 

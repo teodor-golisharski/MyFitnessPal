@@ -19,6 +19,7 @@ int current_rate = 0;
 int current_account = 0;
 
 int bmr = 0;
+std::vector<std::string> logs;
 
 bool save_user(const std::string& username, const std::string& password, const std::string& birthdate,
 	int gender, int height, double weight,
@@ -38,7 +39,6 @@ bool save_user(const std::string& username, const std::string& password, const s
 
 	return true;
 }
-
 bool save_log(const std::string& username, const std::string& date, const std::string& name, int calories)
 {
 	std::ofstream file(LOGS_FILE_NAME, std::ios::app);
@@ -123,8 +123,9 @@ void delete_account()
 	{
 		temp_file << cur_user << "\n";
 	}
-
 	temp_file.close();
+
+	// delete account requires deleting all logs associated with the account
 }
 void view_profile()
 {
@@ -303,9 +304,11 @@ void log_in(const std::string& username, const std::string& password)
 			bmr = DataOperations::calculate_bmr(current_gender, current_weight, current_height, current_age, current_activity_level);
 			break;
 		}
+
 	}
 
 	file.close();
+	logs = load_logged_user_logs(current_user);
 
 	if (found)
 	{
@@ -332,6 +335,8 @@ void log_out()
 	current_account = 0;
 	bmr = 0;
 
+	logs.clear();
+
 	std::cout << LOGOUT_SUCCESSFUL << std::endl;
 }
 
@@ -346,7 +351,7 @@ void add_log(const std::string& type)
 	}
 	else if (type == EXERCISE_TYPE)
 	{
-		std::cout << "----------------------- Add Exercise ----------------------" << std::endl;
+		std::cout << "---------------------- Add Exercise -----------------------" << std::endl;
 	}
 
 	input = InputIntegratedValidation::get_log_name(type);
@@ -360,11 +365,71 @@ void add_log(const std::string& type)
 
 	if (save_log(current_user, date_now, input, calories))
 	{
+		logs.push_back(current_user + "%" + date_now + "%" + input + "%" + std::to_string(calories));
 		std::cout << LOG_SAVED << std::endl;
 	}
 	else
 	{
 		std::cout << SOMETHING_WENT_WRONG << std::endl;
+	}
+}
+void view_log(const std::string& date)
+{
+	std::vector<std::string> exercises;
+	std::vector<std::string> nutritions;
+
+	for (const std::string& log : logs)
+	{
+		size_t pos_username = log.find('%');
+		size_t pos_date = log.find('%', pos_username + 1);
+
+		std::string file_date = log.substr(pos_username + 1, pos_date - pos_username - 1);
+
+		if (file_date == date)
+		{
+			size_t start = pos_date + 1;
+			size_t end = log.find('%', start);
+			std::string name = log.substr(start, end - start);
+
+			start = end + 1;
+			int calories = std::stoi(log.substr(start));
+
+			std::string current_log;
+			if (calories < 0)
+			{
+				calories *= -1;
+				current_log = "You burnt " + std::to_string(calories) + " calories doing " + name + " on " + file_date + ".";
+				exercises.push_back(current_log);
+			}
+			else
+			{
+				current_log = "You consumed " + std::to_string(calories) + " calories from " + name + " on " + file_date + ".";
+				nutritions.push_back(current_log);
+			}
+		}
+	}
+	if (!nutritions.empty())
+	{
+		std::cout << "--------------------- Logged nutrition --------------------" << std::endl;
+		for (std::string item : nutritions)
+		{
+			std::cout << item << std::endl;
+		}
+	}
+	else
+	{
+		std::cout << NUTRITIONS_EMPTY << date << "." << std::endl;
+	}
+	if (!exercises.empty())
+	{
+		std::cout << "--------------------- Logged exercises --------------------" << std::endl;
+		for (std::string item : exercises)
+		{
+			std::cout << item << std::endl;
+		}
+	}
+	else{
+		std::cout << EXERCISES_EMPTY << date << "." << std::endl;
 	}
 }
 
@@ -519,11 +584,13 @@ void command_line()
 			}
 			else if (input == "daily_logs")
 			{
-
+				std::string date_now = InputIntegratedValidation::get_local_time();
+				view_log(date_now);
 			}
 			else if (input == "view_logs")
 			{
-
+				std::string date_input = InputIntegratedValidation::get_log_date();
+				view_log(date_input);
 			}
 			else if (input == "edit_log")
 			{
