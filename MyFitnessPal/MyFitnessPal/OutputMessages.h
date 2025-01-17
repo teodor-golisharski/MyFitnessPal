@@ -13,8 +13,8 @@ const std::string INVALID_WEIGHT = "Invalid weight. Please enter a valid positiv
 const std::string INVALID_HEIGHT = "Invalid height. Please enter a valid positive number: ";
 const std::string RATE_CHANGE_UNAVAILABLE = "Rate change is unavailable. Please update your goal first.";
 
-const std::string INVALID_FOOD_NAME = "Food name cannot contain '%'. Try again.";
-const std::string INVALID_EXERCISE_NAME = "Exercise name cannot contain '%'. Try again.";
+const std::string INVALID_FOOD_NAME = "Food name cannot contain special symbols. Try again.";
+const std::string INVALID_EXERCISE_NAME = "Exercise name cannot contain special symbols. Try again.";
 const std::string INVALID_CALORIES = "Invalid calories. Please enter a positive number: ";
 const std::string INVALID_LOG_DATE = "Invalid log date format.";
 

@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 #include "OutputMessages.h"
-#include "DataValidation.cpp"
+#include "DataHandler.cpp"
 
 std::string current_user = "";
 std::string current_password = "";
@@ -32,9 +32,9 @@ bool save_user(const std::string& username, const std::string& password, const s
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return false;
 	}
-	file << username << "%" << password << "%" << birthdate << "%"
-		<< gender << "%" << height << "%" << weight << "%"
-		<< activity_level << "%" << goal << "%" << rate << "%" << account << "\n";
+	file << username << UNIFIED_DELIMETER << password << UNIFIED_DELIMETER << birthdate << UNIFIED_DELIMETER
+		<< gender << UNIFIED_DELIMETER << height << UNIFIED_DELIMETER << weight << UNIFIED_DELIMETER
+		<< activity_level << UNIFIED_DELIMETER << goal << UNIFIED_DELIMETER << rate << UNIFIED_DELIMETER << account << "\n";
 	file.close();
 
 	return true;
@@ -48,10 +48,44 @@ bool save_log(const std::string& username, const std::string& date, const std::s
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return false;
 	}
-	file << username << "%" << date << "%" << name << "%" << calories << "\n";
+	file << username << UNIFIED_DELIMETER << date << UNIFIED_DELIMETER << name << UNIFIED_DELIMETER << calories << "\n";
 	file.close();
 
 	return true;
+}
+bool delete_log(const std::string& log)
+{
+	std::vector<std::string> active_logs;
+
+	std::ifstream input_file(LOGS_FILE_NAME);
+	if (!input_file)
+	{
+		std::cerr << FILE_NOT_FOUND << std::endl;
+		return false;
+	}
+
+	std::string line;
+	bool log_found = false;
+
+	while (std::getline(input_file, line))
+	{
+		if (line == log)
+		{
+			log_found = true;
+		}
+		else
+		{
+			active_logs.push_back(line);
+		}
+	}
+	input_file.close();
+	std::ofstream temp_file(LOGS_FILE_NAME, std::ios::trunc);
+
+	for (const std::string& cur_log : active_logs)
+	{
+		temp_file << cur_log << "\n";
+	}
+	temp_file.close();
 }
 
 void create_account()
@@ -91,12 +125,12 @@ void delete_account()
 	std::ifstream input_file(USERS_FILE_NAME);
 	if (!input_file)
 	{
-		std::cerr << "Error: Could not open file.\n";
+		std::cerr << FILE_NOT_FOUND << std::endl;
 		return;
 	}
 
 	std::string line;
-	bool userFound = false;
+	bool user_found = false;
 
 	while (std::getline(input_file, line))
 	{
@@ -108,7 +142,7 @@ void delete_account()
 
 		if (temp_username == current_user && temp_password == current_password)
 		{
-			userFound = true;
+			user_found = true;
 		}
 		else
 		{
@@ -155,7 +189,6 @@ void view_profile()
 	}
 	std::cout << "Account: " << ACCOUNTS_STRING[current_account - 1] << std::endl;
 }
-
 void edit_profile()
 {
 	int option = InputIntegratedValidation::get_profile_info();
@@ -340,44 +373,11 @@ void log_out()
 	std::cout << LOGOUT_SUCCESSFUL << std::endl;
 }
 
-void add_log(const std::string& type)
+void get_logs_for_date(const std::string& date,
+	std::vector<std::string>& exercises,
+	std::vector<std::string>& nutritions,
+	std::vector<std::string>& all_logs)
 {
-	std::string input;
-	int calories;
-
-	if (type == NUTRITION_TYPE)
-	{
-		std::cout << "---------------------- Add Nutrition ----------------------" << std::endl;
-	}
-	else if (type == EXERCISE_TYPE)
-	{
-		std::cout << "---------------------- Add Exercise -----------------------" << std::endl;
-	}
-
-	input = InputIntegratedValidation::get_log_name(type);
-	calories = InputIntegratedValidation::get_calories();
-	if (type == EXERCISE_TYPE)
-	{
-		calories *= -1;
-	}
-
-	std::string date_now = InputIntegratedValidation::get_local_time();
-
-	if (save_log(current_user, date_now, input, calories))
-	{
-		logs.push_back(current_user + "%" + date_now + "%" + input + "%" + std::to_string(calories));
-		std::cout << LOG_SAVED << std::endl;
-	}
-	else
-	{
-		std::cout << SOMETHING_WENT_WRONG << std::endl;
-	}
-}
-void view_log(const std::string& date)
-{
-	std::vector<std::string> exercises;
-	std::vector<std::string> nutritions;
-
 	for (const std::string& log : logs)
 	{
 		size_t pos_username = log.find('%');
@@ -406,8 +406,51 @@ void view_log(const std::string& date)
 				current_log = "You consumed " + std::to_string(calories) + " calories from " + name + " on " + file_date + ".";
 				nutritions.push_back(current_log);
 			}
+			all_logs.push_back(log);
 		}
 	}
+}
+void add_log(const std::string& type)
+{
+	std::string input;
+	int calories;
+
+	if (type == NUTRITION_TYPE)
+	{
+		std::cout << "---------------------- Add Nutrition ----------------------" << std::endl;
+	}
+	else if (type == EXERCISE_TYPE)
+	{
+		std::cout << "---------------------- Add Exercise -----------------------" << std::endl;
+	}
+
+	input = InputIntegratedValidation::get_log_name(type);
+	calories = InputIntegratedValidation::get_calories();
+	if (type == EXERCISE_TYPE)
+	{
+		calories *= -1;
+	}
+
+	std::string date_now = InputIntegratedValidation::get_local_time();
+
+	if (save_log(current_user, date_now, input, calories))
+	{
+		logs.push_back(current_user + UNIFIED_DELIMETER + date_now + UNIFIED_DELIMETER + input + UNIFIED_DELIMETER + std::to_string(calories));
+		std::cout << LOG_SAVED << std::endl;
+	}
+	else
+	{
+		std::cout << SOMETHING_WENT_WRONG << std::endl;
+	}
+}
+void view_log(const std::string& date)
+{
+	std::vector<std::string> exercises;
+	std::vector<std::string> nutritions;
+	std::vector<std::string> all_logs;
+
+	get_logs_for_date(date, exercises, nutritions, all_logs);
+
 	if (!nutritions.empty())
 	{
 		std::cout << "--------------------- Logged nutrition --------------------" << std::endl;
@@ -428,8 +471,41 @@ void view_log(const std::string& date)
 			std::cout << item << std::endl;
 		}
 	}
-	else{
+	else
+	{
 		std::cout << EXERCISES_EMPTY << date << "." << std::endl;
+	}
+}
+void edit_log()
+{
+	std::vector<std::string> exercises;
+	std::vector<std::string> nutritions;
+	std::vector<std::string> all_logs;
+
+	std::string date_now = InputIntegratedValidation::get_local_time();
+
+	get_logs_for_date(date_now, exercises, nutritions, all_logs);
+
+	std::cout << "------------------------ Choose log -----------------------" << std::endl;
+	for (size_t i = 0; i < nutritions.size(); i++)
+	{
+		std::cout << i + 1 << " - " << nutritions[i] << std::endl;
+	}
+	for (size_t i = 0; i < exercises.size(); i++)
+	{
+		std::cout << i + 1 + nutritions.size() << " - " << exercises[i] << std::endl;
+	}
+
+	int choice = InputIntegratedValidation::get_validated_input("Option: ", 1, all_logs.size());
+	std::string& selected_log = all_logs[choice - 1];
+	std::string new_log = current_user + UNIFIED_DELIMETER + date_now + UNIFIED_DELIMETER;
+
+	int option = InputIntegratedValidation::get_log_info();
+	std::string parameter = LOG_INFORMATION[option - 1];
+
+	if (parameter == "name")
+	{
+		// TO DO
 	}
 }
 
@@ -594,7 +670,7 @@ void command_line()
 			}
 			else if (input == "edit_log")
 			{
-
+				edit_log();
 			}
 			else if (input == "delete_logs")
 			{
@@ -618,11 +694,9 @@ void command_line()
 
 void run()
 {
-	//start_guide();
-	help_guide(); // temp
+	start_guide();
 	command_line();
 }
-
 
 int main()
 {

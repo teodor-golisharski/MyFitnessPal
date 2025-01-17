@@ -1,6 +1,8 @@
 #pragma once
 #include <string>
 
+const char UNIFIED_DELIMETER = '%';
+
 const std::string NUTRITION_TYPE = "Nutrition";
 const std::string EXERCISE_TYPE = "Exercise";
 
@@ -9,6 +11,7 @@ const std::string LOGS_FILE_NAME = "logs.txt";
 
 const std::string GENDERS[] = { "male", "female" };
 const std::string PROFILE_INFORMATION[] = { "username", "password", "height", "weight", "activity_level", "goal", "rate", "account" };
+const std::string LOG_INFORMATION[] = { "name", "calories" };
 
 const std::string ACTIVITY_LEVELS_STRING[] = {
 	"Sedentary (little to no exercise)",

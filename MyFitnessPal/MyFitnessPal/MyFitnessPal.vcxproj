@@ -134,7 +134,7 @@
     <ClInclude Include="ApplicationConstants.h" />
     <ClInclude Include="DataLoader.h" />
     <ClInclude Include="OutputMessages.h" />
-    <ClInclude Include="DataValidation.cpp" />
+    <ClInclude Include="DataHandler.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -26,7 +26,7 @@
     <ClInclude Include="OutputMessages.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DataValidation.cpp">
+    <ClInclude Include="DataHandler.cpp">
       <Filter>Source Files</Filter>
     </ClInclude>
     <ClInclude Include="ApplicationConstants.h">

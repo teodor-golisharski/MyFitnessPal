@@ -20,7 +20,7 @@ void load_usernames()
 		std::string line;
 		while (std::getline(in_users, line))
 		{
-			size_t pos = line.find('%');
+			size_t pos = line.find(UNIFIED_DELIMETER);
 			if (pos != std::string::npos)
 			{
 
@@ -64,7 +64,7 @@ std::vector<std::string> load_logged_user_logs(const std::string& current_userna
 
 	while (std::getline(file, line))
 	{
-		size_t pos_username = line.find('%');
+		size_t pos_username = line.find(UNIFIED_DELIMETER);
 		if (pos_username == std::string::npos)
 		{
 			continue;

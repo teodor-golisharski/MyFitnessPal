@@ -19,7 +19,7 @@ namespace DataValidation
 
 	bool validate_string(const std::string& input)
 	{
-		if (input.find('%') != std::string::npos)
+		if (input.find(UNIFIED_DELIMETER) != std::string::npos)
 		{
 			return false;
 		}
@@ -46,7 +46,7 @@ namespace DataValidation
 	}
 
 	bool is_valid_date(int year, int month, int day)
-	{		
+	{
 		if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31)
 		{
 			return false;
@@ -56,7 +56,7 @@ namespace DataValidation
 		std::tm localTime = {};
 		if (localtime_s(&localTime, &now) != 0)
 		{
-			return false; 
+			return false;
 		}
 
 		int local_year = localTime.tm_year + 1900;
@@ -112,6 +112,24 @@ namespace DataOperations
 		bmr *= ACTIVITY_LEVELS[activity_level];
 
 		return (int)bmr;
+	}
+
+	std::vector<std::string> split(const std::string& str)
+	{
+		std::vector<std::string> tokens;
+		size_t start = 0;
+		size_t end = str.find(UNIFIED_DELIMETER);
+
+		while (end != std::string::npos)
+		{
+			tokens.push_back(str.substr(start, end - start));
+			start = end + 1;
+			end = str.find(UNIFIED_DELIMETER, start);
+		}
+
+		tokens.push_back(str.substr(start));
+
+		return tokens;
 	}
 }
 
@@ -330,6 +348,16 @@ namespace InputIntegratedValidation
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
 		return get_validated_input("Option: ", 1, 8);
+	}
+	int get_log_info()
+	{
+		std::cout << "-----------------------------------------------------------" << std::endl;
+		std::cout << "1 - Name: " << std::endl;
+		std::cout << "2 - Calories: " << std::endl;
+		std::cout << "#Guide: Enter the number of the parameter you want to edit." << std::endl;
+		std::cout << "-----------------------------------------------------------" << std::endl;
+
+		return get_validated_input("Option: ", 1, 2);
 	}
 
 	std::string get_log_name(const std::string& type)

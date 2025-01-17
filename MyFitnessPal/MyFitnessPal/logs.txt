@@ -2,3 +2,7 @@ teodor.g%2025-01-16%beef%500
 teodor.g%2025-01-16%beef jerky%250
 teodor.g%2025-01-16%squat%-200
 teodor.g%2025-01-16%1km freestyle swimming%-600
+teodor.g%2025-01-17%creamy soup%450
+teodor.g%2025-01-17%perogies%1200
+teodor.g%2025-01-17%deadlift%-250
+teodor.g%2025-01-17%mountain biking%-700
