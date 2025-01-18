@@ -36,7 +36,12 @@ const std::string ACCOUNTS_STRING[] = {
 	"Premium"
 };
 
-const double ACTIVITY_LEVELS[] = { 1.2, 1.375, 1.55, 1.725, 1.9 };
+//									 Proteins  Fat   Carbs
+const double LOSE_WEIGHT_RATIO[] =	   { 0.35, 0.30, 0.35 };
+const double MAINTAIN_WEIGHT_RATIO[] = { 0.25, 0.30, 0.45 };
+const double GAIN_WEIGHT_RATIO[] =     { 0.40, 0.25, 0.35 };
+
+double ACTIVITY_LEVELS[] = { 1.2, 1.375, 1.55, 1.725, 1.9 };
 const int MAX_ACTIVITY_LEVEL = 5;
 
 constexpr int TRANSFORMATION_RATES[] = { 275, 550, 825, 1110 };

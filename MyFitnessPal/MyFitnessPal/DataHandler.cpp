@@ -28,13 +28,11 @@ namespace DataValidation
 
 	bool validate_username(const std::string& username)
 	{
-
-		load_usernames();
 		if (usernames.empty())
 		{
 			return true;
 		}
-		if (validate_string(username))
+		if (!validate_string(username))
 		{
 			return false;
 		}
@@ -81,7 +79,8 @@ namespace DataValidation
 		return true;
 	}
 }
-namespace DataOperations
+
+namespace DataUtility
 {
 	int calculate_age(const std::string& birthdate)
 	{
@@ -102,6 +101,11 @@ namespace DataOperations
 
 	int calculate_bmr(int gender, double weight, int height, int age, int activity_level)
 	{
+		if (activity_level < 0 || activity_level >= sizeof(ACTIVITY_LEVELS) / sizeof(ACTIVITY_LEVELS[0]))
+		{
+			std::cerr << INVALID_ACTIVITY_LEVEL << std::endl;
+			return -1;
+		}
 
 		double weight_index = gender == 1 ? 13.397 : 9.247;
 		double height_index = gender == 1 ? 4.799 : 3.098;
@@ -109,9 +113,88 @@ namespace DataOperations
 
 		double bmr = gender == 1 ? 88.362 : 447.593;
 		bmr += weight_index * weight + height_index * height - age_index * age;
-		bmr *= ACTIVITY_LEVELS[activity_level];
+		bmr *= ACTIVITY_LEVELS[activity_level - 1];
 
-		return (int)bmr;
+		return static_cast<int>(bmr);
+	}
+
+	void calculate_recommendation(int bmr, int current_goal, int current_rate, int current_account)
+	{
+		std::cout << "BMR (Basal Metabolic Rate): " << bmr << std::endl;
+		int recommended = bmr + current_rate;
+		std::cout << "Recommended intake: " << recommended << " calories" << std::endl;
+		if (current_account == 2)
+		{
+			double proteins = recommended / 4;
+			double fats = recommended / 9;
+			double carbs = recommended / 4;
+
+			switch (current_goal)
+			{
+				case 1:
+					proteins *= LOSE_WEIGHT_RATIO[0];
+					fats *= LOSE_WEIGHT_RATIO[1];
+					carbs *= LOSE_WEIGHT_RATIO[2];
+					break;
+				case 2:
+					proteins *= MAINTAIN_WEIGHT_RATIO[0];
+					fats *= MAINTAIN_WEIGHT_RATIO[1];
+					carbs *= MAINTAIN_WEIGHT_RATIO[2];
+					break;
+				case 3:
+					proteins *= GAIN_WEIGHT_RATIO[0];
+					fats *= GAIN_WEIGHT_RATIO[1];
+					carbs *= GAIN_WEIGHT_RATIO[2];
+					break;
+				default:
+					std::cerr << SOMETHING_WENT_WRONG << std::endl;
+					break;
+			}
+
+			std::cout << " * Proteins: " << static_cast<int>(proteins) << "g per day" << std::endl;
+			std::cout << " * Fats: " << static_cast<int>(fats) << "g per day" << std::endl;
+			std::cout << " * Carbohydrates: " << static_cast<int>(carbs) << "g per day" << std::endl;
+		}
+	}
+
+	void display_evaluation(int current_goal, int recommended, int consumed, int burnt){
+		if (current_goal == 1)
+		{
+			if (recommended >= consumed - burnt)
+			{
+				std::cout << "Good job! You are under your daily calorie limit \nto support weight loss." << std::endl;
+			}
+			else
+			{
+				std::cout << "Caution: You have exceeded your recommended calorie \nlimit for weight loss." << std::endl;
+			}
+		}
+		else if (current_goal == 2)
+		{
+			if (std::abs(recommended - (consumed - burnt)) <= 100)
+			{
+				std::cout << "Great work! You are staying within your recommended \ncalorie range to maintain your weight." << std::endl;
+			}
+			else if (recommended > consumed - burnt)
+			{
+				std::cout << "You are slightly under your recommended calorie intake \nfor maintaining weight. Consider eating a bit more." << std::endl;
+			}
+			else
+			{
+				std::cout << "You are slightly over your recommended calorie intake \nfor maintaining weight. Watch your portions!" << std::endl;
+			}
+		}
+		else if (current_goal == 3)
+		{
+			if (recommended <= consumed - burnt)
+			{
+				std::cout << "Great work! You are meeting your calorie target \nfor gaining weight." << std::endl;
+			}
+			else
+			{
+				std::cout << "You are under your recommended calorie intake for gaining \nweight. Consider eating more nutrient-dense foods." << std::endl;
+			}
+		}
 	}
 
 	std::vector<std::string> split(const std::string& str)
@@ -220,7 +303,7 @@ namespace InputIntegratedValidation
 			if (std::cin >> year >> delimiter >> month >> delimiter >> day && delimiter == '-' && DataValidation::is_valid_date(year, month, day))
 			{
 				std::string date = std::to_string(year) + "-" + (month < 10 ? "0" : "") + std::to_string(month) + "-" + (day < 10 ? "0" : "") + std::to_string(day);
-				if (DataOperations::calculate_age(date) >= 14)
+				if (DataUtility::calculate_age(date) >= 14)
 				{
 					return date;
 				}
@@ -352,8 +435,8 @@ namespace InputIntegratedValidation
 	int get_log_info()
 	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
-		std::cout << "1 - Name: " << std::endl;
-		std::cout << "2 - Calories: " << std::endl;
+		std::cout << "1 - Name" << std::endl;
+		std::cout << "2 - Calories" << std::endl;
 		std::cout << "#Guide: Enter the number of the parameter you want to edit." << std::endl;
 		std::cout << "-----------------------------------------------------------" << std::endl;
 
@@ -394,6 +477,4 @@ namespace InputIntegratedValidation
 		return calories;
 	}
 }
-
-
 

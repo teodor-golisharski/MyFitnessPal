@@ -32,7 +32,10 @@ const std::string LOGOUT_SUCCESSFUL = "You have successfully logged out.";
 const std::string ACCOUNT_DELETED_SUCCESSFULLY = "Account deleted successfully! Goodbye! :(";
 const std::string PROFILE_SAVE_CHANGES = "Changes have been saved.";
 const std::string LOG_SAVED = "Your log has been successfully saved!";
+const std::string LOG_EDITED = "Your log has been successfully edited!";
+const std::string DELETED_LOGS = " were deleted.";
 
 // Output messages
-const std::string NUTRITIONS_EMPTY = "No nutrition logs found on ";
-const std::string EXERCISES_EMPTY = "No exercise logs found on ";
+const std::string LOGS_EMPTY = "No logs found on ";
+const std::string LOGS_DELETED = " logs associated with your account were deleted.";
+const std::string ARE_YOU_SURE = "Are you sure? (yes/no)";

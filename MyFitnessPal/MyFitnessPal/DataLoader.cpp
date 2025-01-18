@@ -5,7 +5,6 @@
 #include "DataLoader.h"
 
 std::vector<std::string> usernames;
-std::vector<std::string> users;
 
 void load_usernames()
 {
@@ -31,24 +30,7 @@ void load_usernames()
 		in_users.close();
 	}
 }
-void load_users()
-{
-	std::ifstream in_users(USERS_FILE_NAME);
-	if (!in_users)
-	{
-		std::ofstream users(USERS_FILE_NAME);
-		users.close();
-	}
-	else
-	{
-		std::string line;
-		while (std::getline(in_users, line))
-		{
-			users.push_back(line);
-		}
-		in_users.close();
-	}
-}
+
 std::vector<std::string> load_logged_user_logs(const std::string& current_username)
 {
 	std::vector<std::string> logs;
