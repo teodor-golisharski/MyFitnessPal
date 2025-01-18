@@ -1,6 +1,9 @@
 #include <string>
 #include <ctime>
+#include <iostream>
+#include "DataHandler.h"
 #include "ApplicationConstants.h"
+#include "OutputMessages.h"
 #include "DataLoader.h"
 
 namespace DataValidation
@@ -16,7 +19,6 @@ namespace DataValidation
 		}
 		return false;
 	}
-
 	bool validate_string(const std::string& input)
 	{
 		if (input.find(UNIFIED_DELIMETER) != std::string::npos)
@@ -25,7 +27,6 @@ namespace DataValidation
 		}
 		return true;
 	}
-
 	bool validate_username(const std::string& username)
 	{
 		if (usernames.empty())
@@ -42,7 +43,6 @@ namespace DataValidation
 		}
 		return true;
 	}
-
 	bool is_valid_date(int year, int month, int day)
 	{
 		if (year < 1900 || month < 1 || month > 12 || day < 1 || day > 31)
@@ -98,7 +98,6 @@ namespace DataUtility
 
 		return age;
 	}
-
 	int calculate_bmr(int gender, double weight, int height, int age, int activity_level)
 	{
 		if (activity_level < 0 || activity_level >= sizeof(ACTIVITY_LEVELS) / sizeof(ACTIVITY_LEVELS[0]))
@@ -117,7 +116,6 @@ namespace DataUtility
 
 		return static_cast<int>(bmr);
 	}
-
 	void calculate_recommendation(int bmr, int current_goal, int current_rate, int current_account)
 	{
 		std::cout << "BMR (Basal Metabolic Rate): " << bmr << std::endl;
@@ -156,8 +154,8 @@ namespace DataUtility
 			std::cout << " * Carbohydrates: " << static_cast<int>(carbs) << "g per day" << std::endl;
 		}
 	}
-
-	void display_evaluation(int current_goal, int recommended, int consumed, int burnt){
+	void display_evaluation(int current_goal, int recommended, int consumed, int burnt)
+	{
 		if (current_goal == 1)
 		{
 			if (recommended >= consumed - burnt)
@@ -196,7 +194,6 @@ namespace DataUtility
 			}
 		}
 	}
-
 	std::vector<std::string> split(const std::string& str)
 	{
 		std::vector<std::string> tokens;
@@ -270,7 +267,6 @@ namespace InputIntegratedValidation
 
 		return weight;
 	}
-
 	std::string get_local_time()
 	{
 		std::time_t now = std::time(nullptr);
@@ -292,7 +288,6 @@ namespace InputIntegratedValidation
 		std::string date_now = yearStr + "-" + monthStr + "-" + dayStr;
 		return date_now;
 	}
-
 	std::string get_birthday()
 	{
 		int year, month, day;
@@ -362,7 +357,6 @@ namespace InputIntegratedValidation
 
 		return get_validated_input("Gender: ", 1, 2);
 	}
-
 	int get_activity_level()
 	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
@@ -415,7 +409,6 @@ namespace InputIntegratedValidation
 
 		return get_validated_input("AccountType: ", 1, 2);
 	}
-
 	int get_profile_info()
 	{
 		std::cout << "-----------------------------------------------------------" << std::endl;
@@ -442,7 +435,6 @@ namespace InputIntegratedValidation
 
 		return get_validated_input("Option: ", 1, 2);
 	}
-
 	std::string get_log_name(const std::string& type)
 	{
 		std::string log_name;
@@ -477,4 +469,3 @@ namespace InputIntegratedValidation
 		return calories;
 	}
 }
-

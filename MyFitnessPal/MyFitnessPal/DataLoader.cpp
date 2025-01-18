@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
+#include "DataLoader.h"
 #include "ApplicationConstants.h"
 #include "OutputMessages.h"
-#include "DataLoader.h"
 
 std::vector<std::string> usernames;
 

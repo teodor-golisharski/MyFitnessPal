@@ -2,8 +2,10 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include "DataHandler.h"
+#include "DataLoader.h"
 #include "OutputMessages.h"
-#include "DataHandler.cpp"
+#include "ApplicationConstants.h"
 
 std::string current_user = "";
 std::string current_password = "";

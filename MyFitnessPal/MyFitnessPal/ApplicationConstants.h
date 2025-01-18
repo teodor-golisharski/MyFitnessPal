@@ -1,48 +1,48 @@
 #pragma once
 #include <string>
 
-const char UNIFIED_DELIMETER = '%';
-
-const std::string NUTRITION_TYPE = "Nutrition";
-const std::string EXERCISE_TYPE = "Exercise";
-
-const std::string USERS_FILE_NAME = "users.txt";
-const std::string LOGS_FILE_NAME = "logs.txt";
-
-const std::string GENDERS[] = { "male", "female" };
-const std::string PROFILE_INFORMATION[] = { "username", "password", "height", "weight", "activity_level", "goal", "rate", "account" };
-const std::string LOG_INFORMATION[] = { "name", "calories" };
-
-const std::string ACTIVITY_LEVELS_STRING[] = {
+static const char UNIFIED_DELIMETER = '%';
+ 
+static const std::string NUTRITION_TYPE = "Nutrition";
+static const std::string EXERCISE_TYPE = "Exercise";
+ 
+static const std::string USERS_FILE_NAME = "users.txt";
+static const std::string LOGS_FILE_NAME = "logs.txt";
+ 
+static const std::string GENDERS[] = { "male", "female" };
+static const std::string PROFILE_INFORMATION[] = { "username", "password", "height", "weight", "activity_level", "goal", "rate", "account" };
+static const std::string LOG_INFORMATION[] = { "name", "calories" };
+ 
+static const std::string ACTIVITY_LEVELS_STRING[] = {
 	"Sedentary (little to no exercise)",
 	"Light activity (exercise 1-3 days per week)",
 	"Moderate activity (exercise 3-5 days per week)",
 	"Active (exercise 6-7 days per week)",
 	"Very active (intense workouts or physical labor)"
 };
-const std::string GOALS_STRING[] = {
+static const std::string GOALS_STRING[] = {
 	"Lose weight",
 	"Maintain weight",
 	"Gain weight"
 };
-const std::string RATES_STRING[] = {
+static const std::string RATES_STRING[] = {
 	"0.25 kg a week",
 	"0.50 kg a week",
 	"0.75 kg a week",
 	"1 kg a week"
 };
-const std::string ACCOUNTS_STRING[] = {
+static const std::string ACCOUNTS_STRING[] = {
 	"Standard",
 	"Premium"
 };
-
-//									 Proteins  Fat   Carbs
-const double LOSE_WEIGHT_RATIO[] =	   { 0.35, 0.30, 0.35 };
-const double MAINTAIN_WEIGHT_RATIO[] = { 0.25, 0.30, 0.45 };
-const double GAIN_WEIGHT_RATIO[] =     { 0.40, 0.25, 0.35 };
-
-double ACTIVITY_LEVELS[] = { 1.2, 1.375, 1.55, 1.725, 1.9 };
-const int MAX_ACTIVITY_LEVEL = 5;
-
-constexpr int TRANSFORMATION_RATES[] = { 275, 550, 825, 1110 };
-const int MAX_RATE = 4;
+ 
+ //									 Proteins  Fat   Carbs
+static const double LOSE_WEIGHT_RATIO[] =	   { 0.35, 0.30, 0.35 };
+static const double MAINTAIN_WEIGHT_RATIO[] = { 0.25, 0.30, 0.45 };
+static const double GAIN_WEIGHT_RATIO[] =     { 0.40, 0.25, 0.35 };
+ 
+static double ACTIVITY_LEVELS[] = { 1.2, 1.375, 1.55, 1.725, 1.9 };
+static const int MAX_ACTIVITY_LEVEL = 5;
+ 
+static constexpr int TRANSFORMATION_RATES[] = { 275, 550, 825, 1110 };
+static const int MAX_RATE = 4;
