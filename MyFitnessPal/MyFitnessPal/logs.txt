@@ -6,3 +6,8 @@ teodor.g%2025-01-17%creamy soup%450
 teodor.g%2025-01-17%mountain biking%-750
 teodor.g%2025-01-17%deadlift%-250
 teodor.g%2025-01-17%perogies%1125
+teodor.g%2025-01-19%meatlover pizza%1200
+teodor.g%2025-01-19%shawarma%750
+teodor.g%2025-01-19%fruit salad%300
+teodor.g%2025-01-19%daily running%-250
+teodor.g%2025-01-19%snack%200

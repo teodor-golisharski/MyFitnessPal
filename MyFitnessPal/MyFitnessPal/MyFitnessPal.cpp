@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <fstream>
-#include "DataHandler.h"
+#include "DataHandler.cpp"
 #include "DataLoader.h"
 #include "OutputMessages.h"
 #include "ApplicationConstants.h"
@@ -340,8 +340,6 @@ bool delete_account()
 		temp_file << cur_user << "\n";
 	}
 	temp_file.close();
-	delete_all_logs();
-	log_out();
 	return true;
 }
 void view_profile()
@@ -352,8 +350,8 @@ void view_profile()
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "Birthdate: " << current_birthday << std::endl;
 	std::cout << "Gender: " << GENDERS[current_gender - 1] << std::endl;
-	std::cout << "Height: " << current_height << std::endl;
-	std::cout << "Weight: " << current_weight << std::endl;
+	std::cout << "Height: " << current_height << "cm" <<std::endl;
+	std::cout << "Weight: " << current_weight << "kg" << std::endl;
 	std::cout << "-----------------------------------------------------------" << std::endl;
 	std::cout << "Activity level: " << ACTIVITY_LEVELS_STRING[current_activity_level - 1] << std::endl;
 	std::cout << "Goal: " << GOALS_STRING[current_goal - 1] << std::endl;
@@ -654,7 +652,7 @@ void simulate_loading_bar()
 		std::cout.flush();
 		delay(25);
 	}
-	delay(250);
+	delay(200);
 	std::cout << "] Done!" << std::endl;
 }
 void help_guide()
@@ -771,6 +769,8 @@ void command_line()
 					if (delete_account())
 					{
 						std::cout << ACCOUNT_DELETED_SUCCESSFULLY << std::endl;
+						delete_all_logs();
+						log_out();
 					}
 					else {
 						std::cerr << SOMETHING_WENT_WRONG << std::endl;
@@ -810,7 +810,7 @@ void command_line()
 			else if (input == "delete_logs")
 			{
 				std::string date_input = InputIntegratedValidation::get_log_date();
-				delete_daily_logs(date_input);
+				delete_daily_logs(date_input);				
 			}
 			else
 			{

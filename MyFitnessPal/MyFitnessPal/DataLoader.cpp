@@ -37,7 +37,12 @@ std::vector<std::string> load_logged_user_logs(const std::string& current_userna
 
 	std::ifstream file(LOGS_FILE_NAME);
 
-	if (!file.is_open())
+	if (!file)
+	{
+		std::ofstream temp(LOGS_FILE_NAME);
+		temp.close();
+	}
+	else if (!file.is_open())
 	{
 		std::cerr << FILE_NOT_FOUND << std::endl;
 		return logs;

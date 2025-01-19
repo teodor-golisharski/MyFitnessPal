@@ -1,6 +1,6 @@
 #pragma once
-#include<string>
-#include<vector>
+#include <string>
+#include <vector>
 
 namespace DataValidation
 {

@@ -119,8 +119,8 @@ namespace DataUtility
 	void calculate_recommendation(int bmr, int current_goal, int current_rate, int current_account)
 	{
 		std::cout << "BMR (Basal Metabolic Rate): " << bmr << std::endl;
-		int recommended = bmr + current_rate;
-		std::cout << "Recommended intake: " << recommended << " calories" << std::endl;
+		double recommended = bmr + current_rate;
+		std::cout << "Recommended intake: " << static_cast<int>(recommended) << " calories" << std::endl;
 		if (current_account == 2)
 		{
 			double proteins = recommended / 4;
