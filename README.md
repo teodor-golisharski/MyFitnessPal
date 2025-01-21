@@ -19,10 +19,10 @@ MyFitnessPal is a user-friendly application designed to help individuals monitor
 
 ## Technical Limitations:
 To align with the course objectives and encourage mastery of core programming techniques, the following constraints are in place:
-* Programming Paradigm: The application avoids Object-Oriented Programming (OOP) techniques and adheres to procedural programming principles.
-* Libraries and Tools: The implementation is limited to the following C++ standard libraries:
-** iostream: For console input/output operations.
-** ctime: To handle and format dates and times.
-** string: For manipulating and processing text-based data.
-** vector: To store and manage dynamic collections of data.
-** fstream: To read from and write to local files for data persistence.
+#### Programming Paradigm: The application avoids Object-Oriented Programming (OOP) techniques and adheres to procedural programming principles.
+#### Libraries and Tools: The implementation is limited to the following C++ standard libraries:
+* **iostream:** For console input/output operations.
+* **ctime:** To handle and format dates and times.
+* **string:** For manipulating and processing text-based data.
+* **vector:** To store and manage dynamic collections of data.
+* **fstream:** To read from and write to local files for data persistence.
