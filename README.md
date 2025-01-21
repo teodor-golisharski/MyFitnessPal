@@ -16,6 +16,7 @@ MyFitnessPal is a user-friendly application designed to help individuals monitor
 * Exercise Logging: Add and manage workout routines to monitor burned calories or progress toward fitness goals.
 * Daily Summary: Generate a concise report of calorie intake, burned calories, and net balance.
 * Progress Tracking: Save user progress across sessions using local text files.
+* Account Management: Enjoy complete flexibility and security with personalized accounts tailored to individual fitness journeys.
 
 ## Technical Limitations:
 To align with the course objectives and encourage mastery of core programming techniques, the following constraints are in place:
@@ -27,3 +28,6 @@ The application avoids Object-Oriented Programming (OOP) techniques and adheres 
 * **string:** For manipulating and processing text-based data.
 * **vector:** To store and manage dynamic collections of data.
 * **fstream:** To read from and write to local files for data persistence.
+
+## Goals:
+This project aims to provide a real-world problem-solving experience while reinforcing essential programming skills. The focus is on simplicity, efficiency, and building a solid foundation for future development in more complex environments.
