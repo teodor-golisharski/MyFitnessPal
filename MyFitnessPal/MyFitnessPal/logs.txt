@@ -11,3 +11,7 @@ teodor.g%2025-01-19%shawarma%750
 teodor.g%2025-01-19%fruit salad%300
 teodor.g%2025-01-19%daily running%-250
 teodor.g%2025-01-19%snack%200
+admin%2025-02-03%salmon sandwich%350
+admin%2025-02-03%coffee%20
+admin%2025-02-03%pushups%-100
+admin%2025-02-03%ice cream%365

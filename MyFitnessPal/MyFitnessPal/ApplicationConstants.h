@@ -5,9 +5,6 @@
 * Faculty of Mathematics and Informatics of Sofia University
 * Winter semester 2024/2025
 *
-* @author Teodor Golisharski
-* @idnumber 6MI0600367 @compiler VC
-*
 * <application constants file>
 *
 */
@@ -16,7 +13,7 @@
 #include <string>
 
 static const char UNIFIED_DELIMETER = '%';
- 
+
 static const std::string NUTRITION_TYPE = "Nutrition";
 static const std::string EXERCISE_TYPE = "Exercise";
  
@@ -50,7 +47,7 @@ static const std::string ACCOUNTS_STRING[] = {
 	"Premium"
 };
  
- //									 Proteins  Fat   Carbs
+ //											 Proteins  Fat   Carbs
 static const double LOSE_WEIGHT_RATIO[] =	   { 0.35, 0.30, 0.35 };
 static const double MAINTAIN_WEIGHT_RATIO[] = { 0.25, 0.30, 0.45 };
 static const double GAIN_WEIGHT_RATIO[] =     { 0.40, 0.25, 0.35 };

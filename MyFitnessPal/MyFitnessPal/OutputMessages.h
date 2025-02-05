@@ -5,10 +5,7 @@
 * Faculty of Mathematics and Informatics of Sofia University
 * Winter semester 2024/2025
 *
-* @author Teodor Golisharski
-* @idnumber 6MI0600367 @compiler VC
-*
-* <file for output messages>
+* <file output messages>
 *
 */
 

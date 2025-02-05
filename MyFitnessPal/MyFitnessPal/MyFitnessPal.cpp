@@ -5,9 +5,6 @@
 * Faculty of Mathematics and Informatics of Sofia University
 * Winter semester 2024/2025
 *
-* @author Teodor Golisharski
-* @idnumber 6MI0600367 @compiler VC
-*
 * <main file>
 *
 */
@@ -840,7 +837,6 @@ void command_line()
 		std::cin >> input;
 	}
 }
-
 void run()
 {
 	start_guide();
